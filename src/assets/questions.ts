@@ -119,7 +119,7 @@ export default [
     {
       icon: "bx bxs-backpack",
       question:
-        "能接受對方因為懶得背包而把小東西放你的包包裡嗎？（比如行動充）",
+        "能接受對方因為懶得背包而把小東西放你的包包裡嗎？（例如行動電源、水壺）",
     },
     {
       icon: "bx bx-shower",
