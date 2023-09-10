@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer components {
+  .link {
+    @apply text-blue-600 underline;
+  }
+}
