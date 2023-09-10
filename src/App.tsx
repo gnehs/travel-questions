@@ -112,7 +112,7 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col gap-4 p-4">
       {step === 0 && (
-        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative shadow-xl">
+        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative ">
           <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
             <i className="bx bx-trip text-blue-600"></i>
           </div>
@@ -157,7 +157,7 @@ function App() {
                   x: { type: "spring", stiffness: 300, damping: 30 },
                   opacity: { duration: 0.2 },
                 }}
-                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-2 relative overflow-hidden h-full overflow-y-scroll shadow-xl"
+                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-2 relative overflow-hidden h-full overflow-y-scroll "
               >
                 <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
                   <i className={questions[question].icon}></i>
@@ -174,7 +174,7 @@ function App() {
         </>
       )}
       {step === 2 && (
-        <div className="flex-1 bg-white rounded-xl p-4 overflow-y-scroll shadow-xl">
+        <div className="flex-1 bg-white rounded-xl p-4 overflow-y-scroll ">
           <div className="text-3xl font-bold mb-4">結果</div>
           {questions.map((q, i) => (
             <div
