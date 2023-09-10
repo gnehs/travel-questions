@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
+import useAnswer from "./hooks/useAnswer";
 import questions from "./assets/questions";
 function Button({
   children,
@@ -41,6 +42,7 @@ function Button({
   );
 }
 function App() {
+  const { encode, decode } = useAnswer();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [question, setQuestion] = useState(0);
@@ -48,10 +50,24 @@ function App() {
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
     if (hash && hash.length === questions.length) {
-      setStep(2);
       setResult(hash.split("").map((i) => parseInt(i)));
-    } else {
-      window.location.hash = "";
+      setStep(2);
+    } else if (hash.length) {
+      try {
+        const decoded = decode(hash);
+        console.log(decoded, decoded.length, questions.length);
+        if (decoded.length === questions.length) {
+          setResult(
+            decode(hash)
+              .split("")
+              .map((i: string) => parseInt(i))
+          );
+          setStep(2);
+        }
+      } catch (e) {
+        console.error(e);
+        window.location.hash = "";
+      }
     }
   }, []);
   function share() {
@@ -78,7 +94,7 @@ function App() {
     setResult(newResult);
     if (question === questions.length - 1) {
       setStep(2);
-      window.location.hash = newResult.join("");
+      window.location.hash = encode(newResult.join(""));
     } else {
       setDirection(1);
       setQuestion(question + 1);
@@ -114,7 +130,7 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col gap-2 p-4">
       {step === 0 && (
-        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative ">
+        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative">
           <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
             <i className="bx bx-trip text-blue-600"></i>
           </div>
