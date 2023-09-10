@@ -16,7 +16,7 @@ function Button({
   return (
     <motion.button
       className={twMerge(
-        "rounded-xl px-4 py-3 w-full text-xl flex items-center justify-center gap-2 font-bold transition-colors",
+        "rounded-xl p-2 md:p-3 w-full md:text-xl flex items-center justify-center gap-2 font-bold transition-colors",
         color === "blue"
           ? "bg-blue-200 hover:bg-blue-300 active:bg-blue-400 text-blue-800"
           : "",
@@ -110,14 +110,16 @@ function App() {
     },
   };
   return (
-    <div className="flex w-full h-[100svh] flex-col gap-4 p-4">
+    <div className="flex w-full h-[100svh] flex-col gap-2 p-4">
       {step === 0 && (
         <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative ">
           <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
             <i className="bx bx-trip text-blue-600"></i>
           </div>
-          <div className="text-4xl font-bold">朋友旅行防止絕交檢查表</div>
-          <p className="text-xl opacity-75">
+          <div className="text-2xl md:text-4xl font-bold">
+            朋友旅行防止絕交檢查表
+          </div>
+          <p className="md:text-xl opacity-75">
             這是一份能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
           </p>
         </div>
@@ -129,14 +131,14 @@ function App() {
               color="teal"
               onClick={() => perviousQuestion()}
               className={twMerge(
-                "text-base px-3 py-2 w-max",
+                "text-base px-2 py-1 md:px-3 md:py-2 w-max",
                 question > 0 ? "" : "opacity-0 pointer-events-none"
               )}
             >
               上一題
             </Button>
 
-            <div className="text-xl font-bold text-center opacity-50">
+            <div className="md:text-xl font-bold text-center opacity-50">
               {question + 1} / {questions.length}
             </div>
           </div>
@@ -157,15 +159,15 @@ function App() {
                   x: { type: "spring", stiffness: 300, damping: 30 },
                   opacity: { duration: 0.2 },
                 }}
-                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-2 relative overflow-hidden h-full overflow-y-scroll "
+                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-1 md:gap-2 relative overflow-hidden h-full overflow-y-scroll "
               >
-                <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
+                <div className="text-6xl md:text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
                   <i className={questions[question].icon}></i>
                 </div>
-                <div className="text-2xl font-bold opacity-25">
+                <div className="md:text-2xl font-bold opacity-25">
                   {questions[question].theme}
                 </div>
-                <div className="text-4xl font-bold">
+                <div className="text-2xl md:text-4xl font-bold">
                   {questions[question].question}
                 </div>
               </motion.div>
@@ -256,7 +258,7 @@ function App() {
             <Button color="blue" onClick={() => share()}>
               <i className="bx bxs-share"></i> 分享結果
             </Button>
-            <div className="opacity-50 text-xs mt-4 text-center">
+            <div className="opacity-50 text-xs text-center">
               Developed by{" "}
               <a href="https://gnehs.net" className="link">
                 gnehs
