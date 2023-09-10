@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "framer-motion": "^10.16.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
