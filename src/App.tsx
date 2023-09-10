@@ -203,23 +203,6 @@ function App() {
               </div>
             </div>
           ))}
-          <div className="opacity-50 text-xs mt-4 text-center">
-            Developed by{" "}
-            <a href="https://gnehs.net" className="link">
-              gnehs
-            </a>{" "}
-            | Made with{" "}
-            <a href="https://pancake.tw" className="link">
-              🥞
-            </a>{" "}
-            in Taiwan |{" "}
-            <a
-              href="https://github.com/gnehs/travel-questions"
-              className="link"
-            >
-              Source Code
-            </a>
-          </div>
         </div>
       )}
       <div className="flex flex-col gap-2">
@@ -273,6 +256,23 @@ function App() {
             <Button color="blue" onClick={() => share()}>
               <i className="bx bxs-share"></i> 分享結果
             </Button>
+            <div className="opacity-50 text-xs mt-4 text-center">
+              Developed by{" "}
+              <a href="https://gnehs.net" className="link">
+                gnehs
+              </a>{" "}
+              | Made with{" "}
+              <a href="https://pancake.tw" className="link">
+                🥞
+              </a>{" "}
+              in Taiwan |{" "}
+              <a
+                href="https://github.com/gnehs/travel-questions"
+                className="link"
+              >
+                Source Code
+              </a>
+            </div>
           </>
         )}
       </div>
