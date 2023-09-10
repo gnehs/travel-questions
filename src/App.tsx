@@ -75,7 +75,6 @@ function App() {
     if (navigator.share) {
       navigator.share({
         title: "朋友旅行防止絕交檢查表",
-        text: "這是一個用來檢查你是否適合跟朋友一起旅行的檢查表，請誠實回答，不要為了讓自己看起來很適合而作答。",
         url: location.href,
       });
     } else {
