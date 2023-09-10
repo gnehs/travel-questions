@@ -2,6 +2,18 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import questions from "./assets/questions";
+function BottomButtonContainer({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      className="flex flex-col gap-2 overflow-hidden"
+    >
+      {children}
+    </motion.div>
+  );
+}
 function Button({
   children,
   className,
@@ -65,10 +77,14 @@ function App() {
     }
   }
   function reset() {
-    setStep(0);
+    updateStep(0);
     setQuestion(0);
     setResult(questions.map(() => 0));
     window.location.hash = "";
+  }
+  function updateStep(i: number) {
+    setDirection(step < i ? 1 : -1);
+    setStep(i);
   }
 
   function setAnswer(answer: number) {
@@ -76,7 +92,7 @@ function App() {
     newResult[question] = answer;
     setResult(newResult);
     if (question === questions.length - 1) {
-      setStep(2);
+      updateStep(2);
       window.location.hash = newResult.join("");
     } else {
       setDirection(1);
@@ -113,13 +129,40 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col gap-2 p-4">
       {step === 0 && (
-        <>
-          <div className="md:text-xl font-bold text-center py-1 -mt-2">
-            朋友旅行防止絕交檢查表
+        <div className="md:text-xl font-bold text-center py-1 -mt-2">
+          朋友旅行防止絕交檢查表
+        </div>
+      )}
+      {step === 1 && (
+        <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
+          <Button
+            color="teal"
+            onClick={() => perviousQuestion()}
+            className={twMerge(
+              "text-base px-2 py-1 md:px-3 md:py-2 w-max",
+              question > 0 ? "" : "opacity-0 pointer-events-none"
+            )}
+          >
+            <i className="bx bx-arrow-back"></i>上一題
+          </Button>
+
+          <div className="md:text-xl font-bold text-center">
+            {question + 1} / {questions.length}
           </div>
+        </div>
+      )}
+      {step === 2 && (
+        <div className="md:text-xl font-bold text-center py-1 -mt-2">結果</div>
+      )}
+      <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+        {step === 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
+            key={0}
+            variants={variants}
+            custom={direction}
+            initial="enter"
+            animate="center"
+            exit="exit"
             className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
           >
             <div className="flex-1 rounded-lg p-4 flex items-center justify-center flex-col gap-2 border-2 border-gray-100">
@@ -132,27 +175,17 @@ function App() {
               </div>
             </div>
           </motion.div>
-        </>
-      )}
-      {step === 1 && (
-        <>
-          <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
-            <Button
-              color="teal"
-              onClick={() => perviousQuestion()}
-              className={twMerge(
-                "text-base px-2 py-1 md:px-3 md:py-2 w-max",
-                question > 0 ? "" : "opacity-0 pointer-events-none"
-              )}
-            >
-              <i className="bx bx-arrow-back"></i>上一題
-            </Button>
-
-            <div className="md:text-xl font-bold text-center">
-              {question + 1} / {questions.length}
-            </div>
-          </div>
-          <div className="flex-1 relative">
+        )}
+        {step === 1 && (
+          <motion.div
+            key={1}
+            variants={variants}
+            custom={direction}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="flex-1 relative"
+          >
             <AnimatePresence
               mode="popLayout"
               initial={false}
@@ -182,16 +215,18 @@ function App() {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
-        </>
-      )}
-      {step === 2 && (
-        <>
-          <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
-            <div></div>
-            <div className="md:text-xl font-bold text-center py-1">結果</div>
-          </div>
-          <div className="flex-1 rounded overflow-y-scroll">
+          </motion.div>
+        )}
+        {step === 2 && (
+          <motion.div
+            key={2}
+            variants={variants}
+            custom={direction}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="flex-1 rounded overflow-y-scroll"
+          >
             {questions.map((q, i) => (
               <div
                 key={i}
@@ -219,17 +254,19 @@ function App() {
                 </div>
               </div>
             ))}
-          </div>
-        </>
-      )}
-      <div className="flex flex-col gap-2">
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false}>
         {step === 0 && (
-          <Button color="blue" onClick={() => setStep(1)}>
-            開始<i className="bx bx-arrow-back bx-rotate-180"></i>
-          </Button>
+          <BottomButtonContainer key={0}>
+            <Button color="blue" onClick={() => updateStep(1)}>
+              開始<i className="bx bx-arrow-back bx-rotate-180"></i>
+            </Button>
+          </BottomButtonContainer>
         )}
         {step === 1 && (
-          <>
+          <BottomButtonContainer key={1}>
             <Button
               color="green"
               onClick={() => setAnswer(1)}
@@ -263,10 +300,10 @@ function App() {
             >
               ❓ 有討論空間
             </Button>
-          </>
+          </BottomButtonContainer>
         )}
         {step === 2 && (
-          <>
+          <BottomButtonContainer key={2}>
             <div className="flex gap-2">
               <Button color="teal" onClick={() => reset()}>
                 <i className="bx bx-revision"></i> 重新測驗
@@ -292,9 +329,9 @@ function App() {
                 Source Code
               </a>
             </div>
-          </>
+          </BottomButtonContainer>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
