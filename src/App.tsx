@@ -135,7 +135,7 @@ function App() {
                 question > 0 ? "" : "opacity-0 pointer-events-none"
               )}
             >
-              上一題
+              <i className="bx bx-arrow-back"></i>上一題
             </Button>
 
             <div className="md:text-xl font-bold text-center">
@@ -198,7 +198,7 @@ function App() {
                 </div>
                 <div
                   className={twMerge(
-                    "flex items-center justify-center p-2 rounded-r-xl",
+                    "flex items-center justify-center py-2 px-3 rounded-r-xl",
                     result[i] === 1 ? "bg-green-200" : "",
                     result[i] === 2 ? "bg-red-200" : "",
                     result[i] === 3 ? "bg-teal-200" : ""
@@ -216,7 +216,7 @@ function App() {
       <div className="flex flex-col gap-2">
         {step === 0 && (
           <Button color="blue" onClick={() => setStep(1)}>
-            開始
+            開始<i className="bx bx-arrow-back bx-rotate-180"></i>
           </Button>
         )}
         {step === 1 && (
