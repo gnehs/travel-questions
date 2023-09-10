@@ -43,7 +43,6 @@ function Button({
   );
 }
 function App() {
-  const { encode, decode } = useAnswer();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [question, setQuestion] = useState(0);
@@ -54,21 +53,7 @@ function App() {
       setResult(hash.split("").map((i) => parseInt(i)));
       setStep(2);
     } else if (hash.length) {
-      try {
-        const decoded = decode(hash);
-        console.log(decoded, decoded.length, questions.length);
-        if (decoded.length === questions.length) {
-          setResult(
-            decode(hash)
-              .split("")
-              .map((i: string) => parseInt(i))
-          );
-          setStep(2);
-        }
-      } catch (e) {
-        console.error(e);
-        window.location.hash = "";
-      }
+      window.location.hash = "";
     }
   }, []);
   function share() {
@@ -94,7 +79,7 @@ function App() {
     setResult(newResult);
     if (question === questions.length - 1) {
       setStep(2);
-      window.location.hash = encode(newResult.join(""));
+      window.location.hash = newResult.join("");
     } else {
       setDirection(1);
       setQuestion(question + 1);
