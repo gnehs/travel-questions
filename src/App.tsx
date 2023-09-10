@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
-//@ts-ignore
-import useAnswer from "./hooks/useAnswer.js";
 import questions from "./assets/questions";
 function Button({
   children,
@@ -287,7 +285,7 @@ function App() {
               <a href="https://pancake.tw" className="link">
                 🥞
               </a>{" "}
-              in Taiwan |{" "}
+              |{" "}
               <a
                 href="https://github.com/gnehs/travel-questions"
                 className="link"
