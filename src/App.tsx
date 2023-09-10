@@ -112,10 +112,12 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col gap-4 p-4">
       {step === 0 && (
-        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2">
-          <i className="bx bx-trip text-6xl mb-2 text-blue-600"></i>
-          <div className="text-3xl font-bold">朋友旅行防止絕交檢查表</div>
-          <p className="opacity-75">
+        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative shadow-xl">
+          <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
+            <i className="bx bx-trip text-blue-600"></i>
+          </div>
+          <div className="text-4xl font-bold">朋友旅行防止絕交檢查表</div>
+          <p className="text-xl opacity-75">
             這是一份能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
           </p>
         </div>
@@ -155,7 +157,7 @@ function App() {
                   x: { type: "spring", stiffness: 300, damping: 30 },
                   opacity: { duration: 0.2 },
                 }}
-                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-2 relative overflow-hidden h-full"
+                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-2 relative overflow-hidden h-full overflow-y-scroll shadow-xl"
               >
                 <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
                   <i className={questions[question].icon}></i>
@@ -172,7 +174,7 @@ function App() {
         </>
       )}
       {step === 2 && (
-        <div className="flex-1 bg-white rounded-xl p-4 overflow-y-scroll">
+        <div className="flex-1 bg-white rounded-xl p-4 overflow-y-scroll shadow-xl">
           <div className="text-3xl font-bold mb-4">結果</div>
           {questions.map((q, i) => (
             <div
