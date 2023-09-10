@@ -60,7 +60,7 @@ function App() {
     if (navigator.share) {
       navigator.share({
         title: "朋友旅行防止絕交檢查表",
-        url: location.href,
+        url: `https://travel-questions.gnehs.net/#${result.join("")}`,
       });
     } else {
       alert("您的瀏覽器不支援分享功能，請手動複製網址");
