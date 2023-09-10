@@ -113,26 +113,26 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col gap-2 p-4">
       {step === 0 && (
-        <div className="flex-1 bg-white rounded-xl p-8 flex items-start justify-center flex-col gap-2 relative">
-          <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
-            <i className="bx bx-trip text-blue-600"></i>
+        <>
+          <div className="md:text-xl font-bold text-center py-1 -mt-2">
+            朋友旅行防止絕交檢查表
           </div>
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-2xl md:text-4xl font-bold"
+            className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
           >
-            朋友旅行防止絕交檢查表
+            <div className="flex-1 rounded-lg p-4 flex items-center justify-center flex-col gap-2 border-2 border-gray-100">
+              <i className="text-8xl bx bx-trip text-blue-600"></i>
+              <div className="text-xl md:text-3xl font-bold">
+                朋友旅行防止絕交檢查表
+              </div>
+              <div className="md:text-xl">
+                這是一份能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
+              </div>
+            </div>
           </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="md:text-xl opacity-75"
-          >
-            這是一份能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
-          </motion.p>
-        </div>
+        </>
       )}
       {step === 1 && (
         <>
@@ -189,7 +189,6 @@ function App() {
         <>
           <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
             <div></div>
-
             <div className="md:text-xl font-bold text-center py-1">結果</div>
           </div>
           <div className="flex-1 rounded overflow-y-scroll">
