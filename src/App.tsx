@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
-import useAnswer from "./hooks/useAnswer";
+//@ts-ignore
+import useAnswer from "./hooks/useAnswer.js";
 import questions from "./assets/questions";
 function Button({
   children,
