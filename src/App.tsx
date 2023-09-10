@@ -5,10 +5,10 @@ import questions from "./assets/questions";
 function BottomButtonContainer({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: "auto" }}
-      exit={{ opacity: 0, height: 0 }}
-      className="flex flex-col gap-2 overflow-hidden"
+      initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+      animate={{ opacity: 1, height: "auto", overflow: "initial" }}
+      exit={{ opacity: 0, height: 0, overflow: "hidden" }}
+      className="flex flex-col gap-2"
     >
       {children}
     </motion.div>
@@ -28,7 +28,7 @@ function Button({
   return (
     <motion.button
       className={twMerge(
-        "rounded-xl p-2 md:p-3 w-full md:text-xl flex items-center justify-center gap-2 font-bold transition-colors",
+        "rounded-xl p-2 md:p-3 w-full md:text-xl flex items-center justify-center gap-2 font-bold transition-colors group",
         color === "blue"
           ? "bg-blue-200 hover:bg-blue-300 active:bg-blue-400 text-blue-800"
           : "",
@@ -40,6 +40,9 @@ function Button({
           : "",
         color === "teal"
           ? "bg-teal-200 hover:bg-teal-300 active:bg-teal-400 text-teal-800"
+          : "",
+        color === "stone"
+          ? "bg-stone-200 hover:bg-stone-300 active:bg-stone-400 text-stone-800"
           : "",
         className
       )}
@@ -106,9 +109,9 @@ function App() {
   const variants = {
     enter: (direction: number) => {
       return {
-        x: direction > 0 ? 200 : -200,
+        x: direction > 0 ? 300 : -300,
         opacity: 0,
-        scale: 0.8,
+        scale: 0.9,
       };
     },
     center: {
@@ -120,23 +123,23 @@ function App() {
     exit: (direction: number) => {
       return {
         zIndex: 0,
-        x: direction < 0 ? 200 : -200,
+        x: direction < 0 ? 300 : -300,
         opacity: 0,
-        scale: 0.8,
+        scale: 0.9,
       };
     },
   };
   return (
     <div className="flex w-full h-[100svh] flex-col gap-2 p-4">
       {step === 0 && (
-        <div className="md:text-xl font-bold text-center py-1 -mt-2">
+        <div className="md:text-xl font-bold text-center py-1 -mt-2 opacity-0 pointer-events-none">
           朋友旅行防止絕交檢查表
         </div>
       )}
       {step === 1 && (
         <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
           <Button
-            color="teal"
+            color="stone"
             onClick={() => perviousQuestion()}
             className={twMerge(
               "text-base px-2 py-1 md:px-3 md:py-2 w-max",
@@ -146,8 +149,8 @@ function App() {
             <i className="bx bx-arrow-back"></i>上一題
           </Button>
 
-          <div className="md:text-xl font-bold text-center">
-            {question + 1} / {questions.length}
+          <div className="md:text-xl font-bold text-center tabular-nums">
+            {`${question + 1}`.padStart(2, `0`)} / {questions.length}
           </div>
         </div>
       )}
@@ -165,13 +168,13 @@ function App() {
             exit="exit"
             className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
           >
-            <div className="flex-1 rounded-lg p-4 flex items-center justify-center flex-col gap-2 border-2 border-gray-100">
+            <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-4 border-2 border-gray-100">
               <i className="text-8xl bx bx-trip text-blue-600"></i>
               <div className="text-xl md:text-3xl font-bold">
                 朋友旅行防止絕交檢查表
               </div>
-              <div className="md:text-xl">
-                這是一份能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
+              <div className="md:text-xl opacity-50">
+                這是能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
               </div>
             </div>
           </motion.div>
@@ -204,7 +207,10 @@ function App() {
                 }}
                 className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-1 md:gap-2 relative overflow-hidden h-full overflow-y-scroll "
               >
-                <div className="text-6xl md:text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
+                <div
+                  className="text-6xl md:text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25"
+                  key={question}
+                >
                   <i className={questions[question].icon}></i>
                 </div>
                 <div className="md:text-2xl font-bold opacity-25">
@@ -261,7 +267,8 @@ function App() {
         {step === 0 && (
           <BottomButtonContainer key={0}>
             <Button color="blue" onClick={() => updateStep(1)}>
-              開始<i className="bx bx-arrow-back bx-rotate-180"></i>
+              開始
+              <i className="bx bx-arrow-back rotate-180 group-hover:translate-x-1 transition-transform"></i>
             </Button>
           </BottomButtonContainer>
         )}
