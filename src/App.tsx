@@ -50,6 +50,8 @@ function App() {
     if (hash && hash.length === questions.length) {
       setStep(2);
       setResult(hash.split("").map((i) => parseInt(i)));
+    } else {
+      window.location.hash = "";
     }
   }, []);
   function share() {
