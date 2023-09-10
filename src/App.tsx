@@ -47,7 +47,7 @@ function App() {
   const [result, setResult] = useState(questions.map(() => 0));
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
-    if (hash) {
+    if (hash && hash.length === questions.length) {
       setStep(2);
       setResult(hash.split("").map((i) => parseInt(i)));
     }
