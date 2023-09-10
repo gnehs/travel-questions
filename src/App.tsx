@@ -126,7 +126,7 @@ function App() {
       )}
       {step === 1 && (
         <>
-          <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center">
+          <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
             <Button
               color="teal"
               onClick={() => perviousQuestion()}
@@ -138,7 +138,7 @@ function App() {
               上一題
             </Button>
 
-            <div className="md:text-xl font-bold text-center opacity-50">
+            <div className="md:text-xl font-bold text-center">
               {question + 1} / {questions.length}
             </div>
           </div>
@@ -176,36 +176,42 @@ function App() {
         </>
       )}
       {step === 2 && (
-        <div className="flex-1 bg-white rounded-xl p-4 overflow-y-scroll ">
-          <div className="text-3xl font-bold mb-4">結果</div>
-          {questions.map((q, i) => (
-            <div
-              key={i}
-              className={twMerge(
-                "flex justify-start mb-1 rounded gap-2 bg-opacity-50",
-                result[i] === 1 ? "bg-green-100 text-green-950" : "",
-                result[i] === 2 ? "bg-red-100 text-red-950" : "",
-                result[i] === 3 ? "bg-teal-100 text-teal-950" : ""
-              )}
-            >
+        <>
+          <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
+            <div></div>
+
+            <div className="md:text-xl font-bold text-center py-1">結果</div>
+          </div>
+          <div className="flex-1 rounded overflow-y-scroll">
+            {questions.map((q, i) => (
               <div
+                key={i}
                 className={twMerge(
-                  "flex items-center justify-center text-xl p-2 rounded-l",
-                  result[i] === 1 ? "bg-green-200" : "",
-                  result[i] === 2 ? "bg-red-200" : "",
-                  result[i] === 3 ? "bg-teal-200" : ""
+                  "flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70",
+                  result[i] === 1 ? "bg-green-100 text-green-800" : "",
+                  result[i] === 2 ? "bg-red-100 text-red-800" : "",
+                  result[i] === 3 ? "bg-teal-100 text-teal-800" : ""
                 )}
               >
-                {result[i] === 1 && <span>⭕️</span>}
-                {result[i] === 2 && <span>❌</span>}
-                {result[i] === 3 && <span>❓</span>}
+                <div className="py-2 pl-3 flex justify-start items-center">
+                  {q.question}
+                </div>
+                <div
+                  className={twMerge(
+                    "flex items-center justify-center p-2 rounded-r-xl",
+                    result[i] === 1 ? "bg-green-200" : "",
+                    result[i] === 2 ? "bg-red-200" : "",
+                    result[i] === 3 ? "bg-teal-200" : ""
+                  )}
+                >
+                  {result[i] === 1 && <span>⭕️</span>}
+                  {result[i] === 2 && <span>❌</span>}
+                  {result[i] === 3 && <span>❓</span>}
+                </div>
               </div>
-              <div className="py-2 flex justify-start items-center">
-                {q.question}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
       <div className="flex flex-col gap-2">
         {step === 0 && (
@@ -252,12 +258,14 @@ function App() {
         )}
         {step === 2 && (
           <>
-            <Button color="teal" onClick={() => reset()}>
-              <i className="bx bx-revision"></i> 重新測驗
-            </Button>
-            <Button color="blue" onClick={() => share()}>
-              <i className="bx bxs-share"></i> 分享結果
-            </Button>
+            <div className="flex gap-2">
+              <Button color="teal" onClick={() => reset()}>
+                <i className="bx bx-revision"></i> 重新測驗
+              </Button>
+              <Button color="blue" onClick={() => share()}>
+                <i className="bx bxs-share"></i> 分享結果
+              </Button>
+            </div>
             <div className="opacity-50 text-xs text-center">
               Developed by{" "}
               <a href="https://gnehs.net" className="link">
