@@ -118,12 +118,21 @@ function App() {
           <div className="text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25">
             <i className="bx bx-trip text-blue-600"></i>
           </div>
-          <div className="text-2xl md:text-4xl font-bold">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-2xl md:text-4xl font-bold"
+          >
             朋友旅行防止絕交檢查表
-          </div>
-          <p className="md:text-xl opacity-75">
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="md:text-xl opacity-75"
+          >
             這是一份能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
-          </p>
+          </motion.p>
         </div>
       )}
       {step === 1 && (
@@ -190,9 +199,9 @@ function App() {
                 key={i}
                 className={twMerge(
                   "flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70",
-                  result[i] === 1 ? "bg-green-100 text-green-800" : "",
-                  result[i] === 2 ? "bg-red-100 text-red-800" : "",
-                  result[i] === 3 ? "bg-teal-100 text-teal-800" : ""
+                  result[i] === 1 ? "bg-green-200 text-green-800" : "",
+                  result[i] === 2 ? "bg-red-200 text-red-800" : "",
+                  result[i] === 3 ? "bg-teal-200 text-teal-800" : ""
                 )}
               >
                 <div className="py-2 pl-3 flex justify-start items-center">
@@ -201,9 +210,9 @@ function App() {
                 <div
                   className={twMerge(
                     "flex items-center justify-center py-2 px-3 rounded-r-xl",
-                    result[i] === 1 ? "bg-green-200" : "",
-                    result[i] === 2 ? "bg-red-200" : "",
-                    result[i] === 3 ? "bg-teal-200" : ""
+                    result[i] === 1 ? "bg-green-300" : "",
+                    result[i] === 2 ? "bg-red-300" : "",
+                    result[i] === 3 ? "bg-teal-300" : ""
                   )}
                 >
                   {result[i] === 1 && <span>⭕️</span>}
