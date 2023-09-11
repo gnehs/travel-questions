@@ -5,9 +5,27 @@ import questions from "./assets/questions";
 function BottomButtonContainer({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, height: 0, overflow: "hidden" }}
-      animate={{ opacity: 1, height: "auto", overflow: "initial" }}
-      exit={{ opacity: 0, height: 0, overflow: "hidden" }}
+      initial={{
+        opacity: 0,
+        scale: 0.9,
+        height: 0,
+        overflow: "hidden",
+        marginTop: 0,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        height: "auto",
+        overflow: "initial",
+        marginTop: 8,
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+        height: 0,
+        overflow: "hidden",
+        marginTop: 0,
+      }}
       className="flex flex-col gap-2"
     >
       {children}
@@ -130,14 +148,14 @@ function App() {
     },
   };
   return (
-    <div className="flex w-full h-[100svh] flex-col gap-2 p-4">
+    <div className="flex w-full h-[100svh] flex-col p-4">
       {step === 0 && (
-        <div className="md:text-xl font-bold text-center py-1 -mt-2 opacity-0 pointer-events-none">
+        <div className="md:text-xl font-bold text-center py-1 -mt-2 opacity-0 pointer-events-none mb-2">
           朋友旅行防止絕交檢查表
         </div>
       )}
       {step === 1 && (
-        <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2">
+        <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2 mb-2">
           <Button
             color="stone"
             onClick={() => perviousQuestion()}
@@ -155,12 +173,15 @@ function App() {
         </div>
       )}
       {step === 2 && (
-        <div className="md:text-xl font-bold text-center py-1 -mt-2">結果</div>
+        <div className="md:text-xl font-bold text-center py-1 -mt-2 mb-2">
+          結果
+        </div>
       )}
       <AnimatePresence mode="popLayout" initial={false} custom={direction}>
         {step === 0 && (
           <motion.div
             key={0}
+            layout
             variants={variants}
             custom={direction}
             initial="enter"
@@ -182,6 +203,7 @@ function App() {
         {step === 1 && (
           <motion.div
             key={1}
+            layout
             variants={variants}
             custom={direction}
             initial="enter"
@@ -226,6 +248,7 @@ function App() {
         {step === 2 && (
           <motion.div
             key={2}
+            layout
             variants={variants}
             custom={direction}
             initial="enter"
@@ -313,7 +336,7 @@ function App() {
           <BottomButtonContainer key={2}>
             <div className="flex gap-2">
               <Button color="teal" onClick={() => reset()}>
-                <i className="bx bx-revision"></i> 重新測驗
+                <i className="bx bx-revision"></i> 重新開始
               </Button>
               <Button color="blue" onClick={() => share()}>
                 <i className="bx bxs-share"></i> 分享結果
