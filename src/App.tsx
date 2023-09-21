@@ -73,6 +73,129 @@ function Button({
     </motion.button>
   );
 }
+function InfoCard({
+  href,
+  title,
+  subtitle,
+}: {
+  href: string;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      className="rounded border border-gray-100 px-4 py-2 w-full bg-gray-500 bg-opacity-0 hover:bg-opacity-20 active:bg-opacity-40 transition-colors"
+    >
+      <div className="font-bold">{title}</div>
+      <div className="opacity-60 text-sm">{subtitle}</div>
+    </a>
+  );
+}
+function InfoDialog() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className="flex justify-end items-center">
+        <button
+          className="rounded-full w-12 h-12 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors"
+          onClick={() => setOpen(true)}
+        >
+          <i className="bx bx-info-circle text-2xl"></i>
+        </button>
+      </div>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 flex justify-center items-center z-50"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+          >
+            <div
+              className="fixed inset-0 m-auto bg-black bg-opacity-50 cursor-pointer"
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              className="bg-white shadow-xl rounded-xl p-4 flex flex-col gap-2 w-[min(calc(100vw-52px),480px)] z-10"
+              initial={{
+                opacity: 0,
+                scale: 0.9,
+                y: 40,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.9,
+                y: 100,
+              }}
+            >
+              <div className="flex justify-between items-center text-xl font-bold">
+                關於
+                <button
+                  className="rounded-full w-8 h-8 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors"
+                  onClick={() => setOpen(false)}
+                >
+                  <i className="bx bx-x text-2xl" />
+                </button>
+              </div>
+              <p>
+                本網站的大部分問題來自 Facebook 的{" "}
+                <a
+                  href="https://www.facebook.com/lakuyuki/posts/pfbid02nPJ7d7F3i1trHVpXbjDYp5hzkrUcQBHCWgGgQTxNYSk7ER6CEXwW3dHEJxdFdDjDl"
+                  target="_blank"
+                  className="link"
+                >
+                  這篇文章
+                </a>
+                。
+              </p>
+              <p>
+                另外你也可以到{" "}
+                <a
+                  href="https://github.com/gnehs/travel-questions"
+                  target="_blank"
+                  className="link"
+                >
+                  GitHub
+                </a>{" "}
+                幫我按個星星，有任何問題的話也可以在 GitHub 上開 Issue。
+              </p>
+              <div className="flex gap-2">
+                <InfoCard
+                  href="https://gnehs.net"
+                  title="勝勝"
+                  subtitle="開發者"
+                />
+                <InfoCard
+                  href="https://github.com/gnehs/travel-questions"
+                  title="GitHub"
+                  subtitle="原始碼"
+                />
+                <InfoCard
+                  href="https://pancake.tw"
+                  title="🥞"
+                  subtitle="Made with"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
 function App() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -150,8 +273,9 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col p-4">
       {step === 0 && (
-        <div className="md:text-xl font-bold text-center py-1 -mt-2 opacity-0 pointer-events-none mb-2">
-          朋友旅行防止絕交檢查表
+        <div className="py-1 -mt-2 mb-2 flex justify-between items-center pl-4">
+          <span className="md:text-xl font-bold">朋友旅行防止絕交檢查表</span>
+          <InfoDialog />
         </div>
       )}
       {step === 1 && (
@@ -170,11 +294,13 @@ function App() {
           <div className="md:text-xl font-bold text-center tabular-nums">
             {`${question + 1}`.padStart(2, `0`)} / {questions.length}
           </div>
+          <InfoDialog />
         </div>
       )}
       {step === 2 && (
-        <div className="md:text-xl font-bold text-center py-1 -mt-2 mb-2">
-          結果
+        <div className="py-1 -mt-2 mb-2 flex justify-between items-center">
+          <span className="md:text-xl font-bold">結果</span>
+          <InfoDialog />
         </div>
       )}
       <AnimatePresence mode="popLayout" initial={false} custom={direction}>
@@ -227,7 +353,7 @@ function App() {
                   x: { type: "spring", stiffness: 300, damping: 30 },
                   opacity: { duration: 0.2 },
                 }}
-                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-1 md:gap-2 relative overflow-hidden h-full overflow-y-scroll "
+                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-1 md:gap-2 relative overflow-hidden h-full overflow-y-scroll"
               >
                 <div
                   className="text-6xl md:text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25"
