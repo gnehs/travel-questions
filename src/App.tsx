@@ -83,14 +83,12 @@ function InfoCard({
   subtitle: string;
 }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      className="rounded border border-gray-100 px-4 py-2 w-full bg-gray-500 bg-opacity-0 hover:bg-opacity-20 active:bg-opacity-40 transition-colors"
-    >
-      <div className="font-bold">{title}</div>
-      <div className="opacity-60 text-sm">{subtitle}</div>
-    </a>
+    <div className="w-full">
+      <div className="opacity-60 text-xs">{subtitle}</div>
+      <a href={href} target="_blank" className="font-bold link">
+        {title}
+      </a>
+    </div>
   );
 }
 function InfoDialog() {
@@ -99,7 +97,7 @@ function InfoDialog() {
     <>
       <div className="flex justify-end items-center">
         <button
-          className="rounded-full w-12 h-12 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors"
+          className="rounded-full w-12 h-12 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors translate-x-3"
           onClick={() => setOpen(true)}
         >
           <i className="bx bx-info-circle text-2xl"></i>
@@ -120,74 +118,80 @@ function InfoDialog() {
             }}
           >
             <div
-              className="fixed inset-0 m-auto bg-black bg-opacity-50 cursor-pointer"
+              className="fixed inset-0 m-auto bg-white bg-opacity-70 cursor-pointer"
               onClick={() => setOpen(false)}
             />
             <motion.div
-              className="bg-white shadow-xl rounded-xl p-4 flex flex-col gap-2 w-[min(calc(100vw-52px),480px)] z-10"
-              initial={{
-                opacity: 0,
-                scale: 0.9,
-                y: 40,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.9,
-                y: 100,
-              }}
+              className="bg-white shadow-xl rounded-2xl border border-gray-100  w-[min(calc(100vw-52px),480px)] z-10 relative"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
             >
-              <div className="flex justify-between items-center text-xl font-bold">
-                關於
-                <button
-                  className="rounded-full w-8 h-8 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors"
-                  onClick={() => setOpen(false)}
-                >
-                  <i className="bx bx-x text-2xl" />
-                </button>
+              <button
+                className="rounded-full w-8 h-8 bg-black bg-opacity-0 hover:bg-opacity-5 active:bg-opacity-10 flex items-center justify-center transition-colors absolute top-3 right-3"
+                onClick={() => setOpen(false)}
+              >
+                <i className="bx bx-x text-2xl" />
+              </button>
+              <div className="bg-gray-50 border-b border-gray-100 p-6 flex flex-col gap-4 rounded-t-2xl">
+                <div className="flex justify-center items-center">
+                  <i className="text-6xl md:text-7xl bx bx-trip text-blue-600"></i>
+                </div>
+                <div className="flex justify-center items-center text-xl md:text-2xl font-bold -mt-2">
+                  朋友旅行防止絕交檢查表
+                </div>
               </div>
-              <p>
-                本網站的大部分問題來自 Facebook 的{" "}
-                <a
-                  href="https://www.facebook.com/lakuyuki/posts/pfbid02nPJ7d7F3i1trHVpXbjDYp5hzkrUcQBHCWgGgQTxNYSk7ER6CEXwW3dHEJxdFdDjDl"
-                  target="_blank"
-                  className="link"
-                >
-                  這篇文章
-                </a>
-                。
-              </p>
-              <p>
-                另外你也可以到{" "}
-                <a
-                  href="https://github.com/gnehs/travel-questions"
-                  target="_blank"
-                  className="link"
-                >
-                  GitHub
-                </a>{" "}
-                幫我按個星星，有任何問題的話也可以在 GitHub 上開 Issue。
-              </p>
-              <div className="flex gap-2">
-                <InfoCard
-                  href="https://gnehs.net"
-                  title="勝勝"
-                  subtitle="開發者"
-                />
-                <InfoCard
-                  href="https://github.com/gnehs/travel-questions"
-                  title="GitHub"
-                  subtitle="原始碼"
-                />
-                <InfoCard
-                  href="https://pancake.tw"
-                  title="🥞"
-                  subtitle="Made with"
-                />
+              <div className="p-6 flex flex-col gap-4">
+                <p className="text-sm md:text-base">
+                  本網站的大部分問題來自 Facebook 的{" "}
+                  <a
+                    href="https://www.facebook.com/lakuyuki/posts/pfbid02nPJ7d7F3i1trHVpXbjDYp5hzkrUcQBHCWgGgQTxNYSk7ER6CEXwW3dHEJxdFdDjDl"
+                    target="_blank"
+                    className="link"
+                  >
+                    這篇文章
+                  </a>
+                  。
+                </p>
+                <p className="text-sm md:text-base">
+                  如果這個網站對你有幫助，可以考慮到{" "}
+                  <a
+                    href="https://www.buymeacoffee.com/gnehs"
+                    target="_blank"
+                    className="link"
+                  >
+                    Buy Me A Coffee ☕️
+                  </a>{" "}
+                  小額抖內支持我！
+                </p>
+                <p className="text-sm md:text-base">
+                  另外你也可以到{" "}
+                  <a
+                    href="https://github.com/gnehs/travel-questions"
+                    target="_blank"
+                    className="link"
+                  >
+                    GitHub
+                  </a>{" "}
+                  幫我按個星星，有任何問題的話也可以在 GitHub 上開 Issue。
+                </p>
+                <div className="flex gap-2 border-t border-gray-100 pt-4">
+                  <InfoCard
+                    href="https://gnehs.net"
+                    title="勝勝"
+                    subtitle="開發者"
+                  />
+                  <InfoCard
+                    href="https://pancake.tw"
+                    title="🥞"
+                    subtitle="Made with"
+                  />
+                  <InfoCard
+                    href="https://github.com/gnehs/travel-questions"
+                    title="GitHub"
+                    subtitle="原始碼"
+                  />
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -273,7 +277,7 @@ function App() {
   return (
     <div className="flex w-full h-[100svh] flex-col p-4">
       {step === 0 && (
-        <div className="py-1 -mt-2 mb-2 flex justify-between items-center pl-4">
+        <div className="-mt-2 mb-2 flex justify-between items-center">
           <span className="md:text-xl font-bold">朋友旅行防止絕交檢查表</span>
           <InfoDialog />
         </div>
@@ -284,7 +288,7 @@ function App() {
             color="stone"
             onClick={() => perviousQuestion()}
             className={twMerge(
-              "text-base px-2 py-1 md:px-3 md:py-2 w-max",
+              "text-base px-2 md:px-3 md:py-2 w-max",
               question > 0 ? "" : "opacity-0 pointer-events-none"
             )}
           >
@@ -298,7 +302,7 @@ function App() {
         </div>
       )}
       {step === 2 && (
-        <div className="py-1 -mt-2 mb-2 flex justify-between items-center">
+        <div className="-mt-2 mb-2 flex justify-between items-center">
           <span className="md:text-xl font-bold">結果</span>
           <InfoDialog />
         </div>
@@ -315,12 +319,12 @@ function App() {
             exit="exit"
             className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
           >
-            <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-4 border-2 border-gray-100">
+            <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-3 md:gap-4 border-2 border-gray-100">
               <i className="text-8xl bx bx-trip text-blue-600"></i>
               <div className="text-xl md:text-3xl font-bold">
                 朋友旅行防止絕交檢查表
               </div>
-              <div className="md:text-xl opacity-50">
+              <div className="text-sm -mt-1 md:mt-0 md:text-xl opacity-50">
                 這是能讓您與朋友在旅行前就透過問題去確認彼此價值觀及旅遊風格是否相符的工具，目的在於避免旅行中因理念不合而引發爭端。
               </div>
             </div>
