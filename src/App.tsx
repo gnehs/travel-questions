@@ -214,12 +214,16 @@ function App() {
       window.location.hash = "";
     }
   }, []);
-  function share() {
+  async function share() {
+    const url = `https://travel-questions.gnehs.net/#${result.join("")}`;
     if (navigator.share) {
       navigator.share({
         title: "朋友旅行防止絕交檢查表",
-        url: `https://travel-questions.gnehs.net/#${result.join("")}`,
+        url,
       });
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      alert("已複製網址到剪貼簿");
     } else {
       alert("您的瀏覽器不支援分享功能，請手動複製網址");
     }
