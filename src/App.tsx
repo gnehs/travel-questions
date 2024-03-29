@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import questions from "./assets/questions";
+import Result from "./Result";
+
 function BottomButtonContainer({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
@@ -200,22 +202,74 @@ function InfoDialog() {
     </>
   );
 }
+
+function parseAnswer(answer = "") {
+  const formattedAnswer = parseInt(answer);
+  return [1, 2, 3].includes(formattedAnswer) ? formattedAnswer : 4;
+}
+
+function parseQuestionResult() {
+  const { search } = window.location;
+  // const hash = window.location.hash.replace("#", "");
+
+  // if (hash && hash.length === questions.length) {
+  //   return [
+  //     [
+  //       "me",
+  //       hash
+  //         .replace("#", "")
+  //         .split("")
+  //         .map(parseAnswer),
+  //     ],
+  //   ];
+  // }
+
+  if (search) {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+
+    const multiResult = Object.entries(
+      Object.fromEntries(urlSearchParams.entries()),
+    )
+      .filter(([, value]) => value.length === questions.length)
+      .map(([key, value]) => [key, value.split("").map(parseAnswer)]);
+
+    return multiResult.length > 0 ? multiResult : null;
+  }
+
+  return null;
+}
+
 function App() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [question, setQuestion] = useState(0);
   const [result, setResult] = useState(questions.map(() => 0));
+
   useEffect(() => {
+    const perviousResult = parseQuestionResult();
+
+    if (!window.location.hash && !window.location.search) {
+      return;
+    }
     const hash = window.location.hash.replace("#", "");
+
+    // 移除 hash 重新導向並加上 search
     if (hash && hash.length === questions.length) {
-      setResult(hash.split("").map((i) => parseInt(i)));
+      const newLink = window.location.origin + `?me=${hash}`;
+      window.location.assign(newLink);
+      return;
+    }
+
+    if (perviousResult) {
+      setResult(perviousResult[0][1] as number[]);
       setStep(2);
-    } else if (hash.length) {
-      window.location.hash = "";
+    } else {
+      window.location.assign(window.location.origin);
     }
   }, []);
+
   async function share() {
-    const url = `https://travel-questions.gnehs.net/#${result.join("")}`;
+    const url = `https://travel-questions.gnehs.net?me=${result.join("")}`;
     if (navigator.share) {
       navigator.share({
         title: "朋友旅行防止絕交檢查表",
@@ -245,7 +299,7 @@ function App() {
     setResult(newResult);
     if (question === questions.length - 1) {
       updateStep(2);
-      window.location.hash = newResult.join("");
+      window.location.search = `?me=${newResult.join("")}`;
     } else {
       setDirection(1);
       setQuestion(question + 1);
@@ -391,31 +445,7 @@ function App() {
             className="flex-1 rounded overflow-y-scroll"
           >
             {questions.map((q, i) => (
-              <div
-                key={i}
-                className={twMerge(
-                  "flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70",
-                  result[i] === 1 ? "bg-green-200 text-green-800" : "",
-                  result[i] === 2 ? "bg-red-200 text-red-800" : "",
-                  result[i] === 3 ? "bg-teal-200 text-teal-800" : ""
-                )}
-              >
-                <div className="py-2 pl-3 flex justify-start items-center">
-                  {q.question}
-                </div>
-                <div
-                  className={twMerge(
-                    "flex items-center justify-center py-2 px-3 rounded-r-xl",
-                    result[i] === 1 ? "bg-green-300" : "",
-                    result[i] === 2 ? "bg-red-300" : "",
-                    result[i] === 3 ? "bg-teal-300" : ""
-                  )}
-                >
-                  {result[i] === 1 && <span>⭕️</span>}
-                  {result[i] === 2 && <span>❌</span>}
-                  {result[i] === 3 && <span>❓</span>}
-                </div>
-              </div>
+              <Result key={i} question={q.question} answer={result[i]} />
             ))}
           </motion.div>
         )}
