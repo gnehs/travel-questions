@@ -1,11 +1,31 @@
 import { twMerge } from "tailwind-merge";
 
+function Answer({ answer, className }: { answer: number; className?: string }) {
+  return (
+    <div
+      className={twMerge(
+        "my-answer flex items-center justify-center py-2 px-3  w-10 h-full",
+        answer === 1 ? "bg-green-300" : "",
+        answer === 2 ? "bg-red-300" : "",
+        answer === 3 ? "bg-teal-300" : "",
+        className,
+      )}>
+      {answer === 1 && <span>⭕️</span>}
+      {answer === 2 && <span>❌</span>}
+      {answer === 3 && <span>❓</span>}
+      {answer === 4 && <span>未知錯誤</span>}
+    </div>
+  );
+}
+
 function Result({
   question,
   answer,
+  otherAswerList,
 }: {
   question: string;
-  answer: 1 | 2 | 3 | unknown;
+  answer: number;
+  otherAswerList?: number[] | null;
 }) {
   return (
     <div
@@ -18,17 +38,19 @@ function Result({
       <div className="py-2 pl-3 flex justify-start items-center">
         {question}
       </div>
-      <div
-        className={twMerge(
-          "flex items-center justify-center py-2 px-3 rounded-r-xl",
-          answer === 1 ? "bg-green-300" : "",
-          answer === 2 ? "bg-red-300" : "",
-          answer === 3 ? "bg-teal-300" : "",
-        )}>
-        {answer === 1 && <span>⭕️</span>}
-        {answer === 2 && <span>❌</span>}
-        {answer === 3 && <span>❓</span>}
-        {answer === 4 && <span>未知錯誤</span>}
+      <div className="flex items-center">
+        <Answer answer={answer} />
+        {otherAswerList?.map((otherAnswer, index) => (
+          <Answer
+            key={index}
+            answer={otherAnswer}
+            className={
+              index === otherAswerList.length - 1
+                ? "rounded-r-xl border-solid border-l-2 border-l-blue-50"
+                : " border-solid border-l-2"
+            }
+          />
+        ))}
       </div>
     </div>
   );
