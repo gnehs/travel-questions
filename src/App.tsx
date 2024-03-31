@@ -266,19 +266,6 @@ function App() {
     if (perviousResult.length > 1) {
       const otherResults = perviousResult.slice(1);
       updateOtherResultList(otherResults);
-      // const formattedResultList = otherResults.reduce<number[][]>(
-      //   (acc, curr) => {
-      //     const result = curr[1] as number[];
-      //     console.log("result :>> ", result);
-      //     result.forEach((answer, index) => {
-      //       acc[index].push(answer);
-      //     });
-      //     return acc;
-      //   },
-      //   Array.from({ length: questions.length }, () => Array<number>()),
-      // );
-      // // console.log("formattedResultList :>> ", formattedResultList);
-      // setOtherResultList(formattedResultList);
     }
 
     setStep(2);
