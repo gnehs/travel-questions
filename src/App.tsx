@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
+import urlParser from "url-parse";
+
 import questions from "./assets/questions";
 import Result from "./Result";
+
+const BASE_URL = "https://travel-questions.gnehs.net";
 
 function BottomButtonContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -199,28 +203,22 @@ function parseAnswer(answer = "") {
   return [1, 2, 3].includes(formattedAnswer) ? formattedAnswer : 4;
 }
 
-function parseQuestionResult() {
-  const { search } = window.location;
-  // const hash = window.location.hash.replace("#", "");
+function parseQuestionResultFromQueryString(
+  url = "",
+): Array<[string, number[]]> | null {
+  if (!url) {
+    return null;
+  }
 
-  // if (hash && hash.length === questions.length) {
-  //   return [
-  //     [
-  //       "me",
-  //       hash
-  //         .replace("#", "")
-  //         .split("")
-  //         .map(parseAnswer),
-  //     ],
-  //   ];
-  // }
+  const { hash, query } = urlParser(url, true);
+  const formattedHash = hash.replace("#", "");
 
-  if (search) {
-    const urlSearchParams = new URLSearchParams(window.location.search);
+  if (formattedHash && formattedHash.length === questions.length) {
+    return [["me", formattedHash.split("").map(parseAnswer)]];
+  }
 
-    const multiResult = Object.entries(
-      Object.fromEntries(urlSearchParams.entries()),
-    )
+  if (query) {
+    const multiResult = (Object.entries(query) as string[][])
       .filter(([, value]) => value.length === questions.length)
       .map(([key, value]) => [key, value.split("").map(parseAnswer)]);
 
@@ -234,14 +232,13 @@ function App() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [question, setQuestion] = useState(0);
+  const [urlResult, setUrlResult] = useState<string>("");
   const [result, setResult] = useState(questions.map(() => 0));
   const [otherResultList, setOtherResultList] = useState<number[][] | null>(
     null,
   );
 
   useEffect(() => {
-    const perviousResult = parseQuestionResult();
-
     if (!window.location.hash && !window.location.search) {
       return;
     }
@@ -254,6 +251,10 @@ function App() {
       return;
     }
 
+    const perviousResult = parseQuestionResultFromQueryString(
+      window.location.href,
+    );
+
     if (!perviousResult) {
       window.location.assign(window.location.origin);
       return;
@@ -264,27 +265,27 @@ function App() {
     // 有多個結果
     if (perviousResult.length > 1) {
       const otherResults = perviousResult.slice(1);
-      console.log("otherResults :>> ", otherResults);
-      const formattedResultList = otherResults.reduce<number[][]>(
-        (acc, curr) => {
-          const result = curr[1] as number[];
-          console.log("result :>> ", result);
-          result.forEach((answer, index) => {
-            acc[index].push(answer);
-          });
-          return acc;
-        },
-        Array.from({ length: questions.length }, () => Array<number>()),
-      );
-      console.log("formattedResultList :>> ", formattedResultList);
-      setOtherResultList(formattedResultList);
+      updateOtherResultList(otherResults);
+      // const formattedResultList = otherResults.reduce<number[][]>(
+      //   (acc, curr) => {
+      //     const result = curr[1] as number[];
+      //     console.log("result :>> ", result);
+      //     result.forEach((answer, index) => {
+      //       acc[index].push(answer);
+      //     });
+      //     return acc;
+      //   },
+      //   Array.from({ length: questions.length }, () => Array<number>()),
+      // );
+      // // console.log("formattedResultList :>> ", formattedResultList);
+      // setOtherResultList(formattedResultList);
     }
 
     setStep(2);
   }, []);
 
   async function share() {
-    const url = `https://travel-questions.gnehs.net?me=${result.join("")}`;
+    const url = `${BASE_URL}?me=${result.join("")}`;
     if (navigator.share) {
       navigator.share({
         title: "朋友旅行防止絕交檢查表",
@@ -324,6 +325,49 @@ function App() {
     setDirection(-1);
     setQuestion(question - 1);
   }
+
+  function updateOtherResultList(list: Array<[string, number[]]>) {
+    const formattedResultList = list.reduce<number[][]>(
+      (acc, curr) => {
+        const result = curr[1];
+        result.forEach((answer, index) => {
+          acc[index].push(answer);
+        });
+        return acc;
+      },
+      Array.from({ length: questions.length }, () => Array<number>()),
+    );
+    
+    if (!otherResultList) {
+      setOtherResultList(formattedResultList);
+    }else {
+      const newResultList = formattedResultList.map((result, index) => {
+        return [...otherResultList[index], ...result];
+      });
+      setOtherResultList(newResultList);
+    }
+  }
+
+  function onUrlBtnClick() {
+    if (!urlResult) return;
+    const formattedUrl = urlResult.trim();
+    const isValid =
+      formattedUrl.trim().startsWith(`${BASE_URL}#`) ||
+      formattedUrl.trim().startsWith(`${BASE_URL}?`);
+    if (!isValid) {
+      alert("請貼上正確的網址");
+      return;
+    }
+    const result = parseQuestionResultFromQueryString(formattedUrl);
+
+    if (!result) {
+      alert("請貼上正確的網址");
+      return;
+    }
+    updateOtherResultList(result);
+    // setUrlResult("");
+  }
+
   const variants = {
     enter: (direction: number) => {
       return {
@@ -374,9 +418,31 @@ function App() {
         </div>
       )}
       {step === 2 && (
-        <div className="-mt-2 mb-2 flex justify-between items-center">
-          <span className="md:text-xl font-bold">結果</span>
-          <InfoDialog />
+        <div className="-mt-2 mb-2 ">
+          <div className="flex justify-between items-center">
+            <span className="md:text-xl font-bold">結果</span>
+            <InfoDialog />
+          </div>
+          <div>
+            <div className="md:text-xl font-medium">
+              想對照朋友的結果嗎？把他的連結貼上來吧！
+            </div>
+            <div className="flex justify-between items-center">
+              <input
+                type="text"
+                className="flex-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="在這裡貼上朋友的連結"
+                value={urlResult}
+                onChange={(e) => setUrlResult(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && onUrlBtnClick()}
+              />
+              <button
+                className="ml-2 py-2 px-2 flex-none rounded-lg bg-green-200 border border-gray-300 hover:bg-green-300 active:bg-green-400"
+                onClick={onUrlBtnClick}>
+                送出
+              </button>
+            </div>
+          </div>
         </div>
       )}
       <AnimatePresence mode="popLayout" initial={false} custom={direction}>
@@ -443,11 +509,11 @@ function App() {
           </motion.div>
         )}
         {step === 2 && (
-          <>
+          <div className="w-full overflow-y-scroll">
             {otherResultList && (
               <div className="flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70">
                 {/* 隱藏問題，用來排班 */}
-                <div className="opacity-0	">{questions[0].question}</div>
+                <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center opacity-0">{questions[0].question}</div>
                 <div className="flex items-center">
                   <div className="py-2 text-center bg-pink-200  w-10">Me</div>
                   {otherResultList[0].map((_, index) => (
@@ -456,7 +522,8 @@ function App() {
                       className={twMerge(
                         "py-2 w-10 text-center border-solid border-l-2 border-l-blue-50",
                         index % 2 === 0 ? "bg-blue-300" : "bg-blue-500",
-                        index === otherResultList[0].length - 1 && 'rounded-r-xl'
+                        index === otherResultList[0].length - 1 &&
+                          "rounded-r-xl",
                       )}>
                       {String.fromCharCode(65 + index)}
                     </div>
@@ -472,7 +539,7 @@ function App() {
               initial="enter"
               animate="center"
               exit="exit"
-              className="flex-1 rounded overflow-y-scroll">
+              className="flex-1 rounded">
               {questions.map((q, i) => (
                 <Result
                   key={i}
@@ -482,7 +549,7 @@ function App() {
                 />
               ))}
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
       <AnimatePresence initial={false}>

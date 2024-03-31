@@ -35,7 +35,7 @@ function Result({
         answer === 2 ? "bg-red-200 text-red-800" : "",
         answer === 3 ? "bg-teal-200 text-teal-800" : "",
       )}>
-      <div className="py-2 pl-3 flex justify-start items-center">
+      <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center">
         {question}
       </div>
       <div className="flex items-center">
