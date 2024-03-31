@@ -285,7 +285,26 @@ function App() {
   }, []);
 
   async function share() {
-    const url = `${BASE_URL}?me=${result.join("")}`;
+    const formattedOtherResultList = otherResultList
+      ? otherResultList
+          .reduce<number[][]>((result, current) => {
+            current.map((answer, index) => {
+              if (!result[index]) {
+                result[index] = [];
+              }
+              result[index].push(answer);
+            });
+
+            return result;
+          }, [])
+          .map((result, index) => {
+            return `&${String.fromCharCode(97 + index)}=${result.join("")}`;
+          })
+          .join("")
+      : "";
+
+    const url = `${BASE_URL}?me=${result.join("")}${formattedOtherResultList}`;
+
     if (navigator.share) {
       navigator.share({
         title: "朋友旅行防止絕交檢查表",
@@ -337,10 +356,10 @@ function App() {
       },
       Array.from({ length: questions.length }, () => Array<number>()),
     );
-    
+
     if (!otherResultList) {
       setOtherResultList(formattedResultList);
-    }else {
+    } else {
       const newResultList = formattedResultList.map((result, index) => {
         return [...otherResultList[index], ...result];
       });
@@ -513,7 +532,9 @@ function App() {
             {otherResultList && (
               <div className="flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70">
                 {/* 隱藏問題，用來排班 */}
-                <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center opacity-0">{questions[0].question}</div>
+                <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center opacity-0">
+                  {questions[0].question}
+                </div>
                 <div className="flex items-center">
                   <div className="py-2 text-center bg-pink-200  w-10">Me</div>
                   {otherResultList[0].map((_, index) => (
