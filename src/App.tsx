@@ -218,7 +218,9 @@ function parseQuestionResultFromQueryString(
   }
 
   if (query) {
-    const multiResult = (Object.entries(query) as string[][])
+    const multiResult: Array<[string, number[]]> = (
+      Object.entries(query) as string[][]
+    )
       .filter(([, value]) => value.length === questions.length)
       .map(([key, value]) => [key, value.split("").map(parseAnswer)]);
 
