@@ -284,7 +284,7 @@ function App() {
     setStep(2);
   }, []);
 
-  async function share() {
+  function getShareUrl() {
     const formattedOtherResultList = otherResultList
       ? otherResultList
           .reduce<number[][]>((result, current) => {
@@ -303,7 +303,10 @@ function App() {
           .join("")
       : "";
 
-    const url = `${BASE_URL}?me=${result.join("")}${formattedOtherResultList}`;
+    return `${BASE_URL}?me=${result.join("")}${formattedOtherResultList}`;
+  }
+  async function share() {
+    const url = getShareUrl();
 
     if (navigator.share) {
       navigator.share({
@@ -323,6 +326,22 @@ function App() {
     setResult(questions.map(() => 0));
     window.location.hash = "";
   }
+
+  function resetWithNewUser() {
+    updateStep(0);
+    setQuestion(0);
+    setResult(questions.map(() => 0));
+    if (otherResultList) {
+      const newResultList = otherResultList.map((question, index) => {
+        question.push(result[index]);
+        return question;
+      });
+      setOtherResultList(newResultList);
+    } else {
+      setOtherResultList(result.map((answer) => [answer]));
+    }
+  }
+
   function updateStep(i: number) {
     setDirection(step < i ? 1 : -1);
     setStep(i);
@@ -334,7 +353,7 @@ function App() {
     setResult(newResult);
     if (question === questions.length - 1) {
       updateStep(2);
-      window.location.search = `?me=${newResult.join("")}`;
+      // window.location.search = `?me=${newResult.join("")}`;
     } else {
       setDirection(1);
       setQuestion(question + 1);
@@ -621,6 +640,9 @@ function App() {
             <div className="flex gap-2">
               <Button color="teal" onClick={() => reset()}>
                 <i className="bx bx-revision"></i> 重新開始
+              </Button>
+              <Button color="green" onClick={() => resetWithNewUser()}>
+                <i className="bx bx-plus"></i> 新增使用者
               </Button>
               <Button color="blue" onClick={() => share()}>
                 <i className="bx bxs-share"></i> 分享結果
