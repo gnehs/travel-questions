@@ -365,7 +365,7 @@ function App() {
       return;
     }
     updateOtherResultList(result);
-    // setUrlResult("");
+    setUrlResult("");
   }
 
   const variants = {
