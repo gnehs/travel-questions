@@ -7,6 +7,7 @@ import questions from "./assets/questions";
 import Result from "./Result";
 
 const BASE_URL = "https://travel-questions.gnehs.net";
+const SUPPORT_URL_LIST = [BASE_URL];
 
 function BottomButtonContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -378,9 +379,10 @@ function App() {
   function onUrlBtnClick() {
     if (!urlResult) return;
     const formattedUrl = urlResult.trim();
-    const isValid =
-      formattedUrl.trim().startsWith(`${BASE_URL}#`) ||
-      formattedUrl.trim().startsWith(`${BASE_URL}?`);
+    const isValid = SUPPORT_URL_LIST.some((url) =>
+      formattedUrl.trim().startsWith(url),
+    );
+
     if (!isValid) {
       alert("請貼上正確的網址");
       return;
