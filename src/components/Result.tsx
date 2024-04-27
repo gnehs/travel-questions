@@ -31,12 +31,12 @@ function Answer({
     names.length > 0 && (
       <div
         className={twMerge(
-          "text-sm grid grid-cols-[auto_1fr] items-start rounded last:rounded-b-lg overflow-hidden"
+          "text-sm grid grid-cols-[auto_1fr] rounded last:rounded-b-lg overflow-hidden"
         )}
       >
         <div
           className={twMerge(
-            "flex items-center justify-center px-3 py-2 h-full",
+            "flex items-center justify-center px-3 py-2",
             bgColor
           )}
         >
@@ -46,7 +46,7 @@ function Answer({
         </div>
         <div
           className={twMerge(
-            "px-3 py-2 bg-opacity-50 h-full flex flex-col gap-0.5 justify-center bg-gradient-to-r to-gray-50 shadow-2xl",
+            "px-3 py-2 bg-opacity-50 flex flex-col gap-0.5 justify-center bg-gradient-to-r to-gray-50 shadow-2xl",
             bgColor
           )}
         >
