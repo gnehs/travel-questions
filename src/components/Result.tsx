@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import questions from "../assets/questions";
+import { useLocalStorage } from "usehooks-ts";
 function filterResultListWithAnswer(
   question: number,
   answer: number,
@@ -19,6 +20,7 @@ function Answer({
   answer: number;
   resultList: { [key: string]: number[] };
 }) {
+  const [username] = useLocalStorage("name", "");
   const names = filterResultListWithAnswer(question, answer, resultList);
   const bgColor = [
     "bg-green-300 text-green-800",
@@ -45,7 +47,12 @@ function Answer({
           )}
         >
           {names.map((name) => (
-            <div key={name}>{name}</div>
+            <div
+              key={name}
+              className={twMerge(username === name && "font-bold")}
+            >
+              {name}
+            </div>
           ))}
         </div>
       </div>

@@ -7,10 +7,11 @@ import questions from "./assets/questions";
 import Result from "./components/Result";
 import Button from "./components/Button";
 import { encode, decode } from "./utils/encodeResult";
-const BASE_URL = "https://travel-questions.gnehs.net";
-const SUPPORT_URL_LIST = [BASE_URL, "http://localhost:5173"];
 import BottomButtonContainer from "./components/BottomButtonContainer";
 import InfoDialog from "./components/InfoDialog";
+
+const BASE_URL = "https://travel-questions.gnehs.net";
+const SUPPORT_URL_LIST = [BASE_URL, "http://localhost:5173"];
 
 function parseAnswer(answer = "") {
   const formattedAnswer = parseInt(answer);
