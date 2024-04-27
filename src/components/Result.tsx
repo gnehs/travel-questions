@@ -36,7 +36,7 @@ function Answer({
       >
         <div
           className={twMerge(
-            "flex items-center justify-center px-4 py-2 h-full",
+            "flex items-center justify-center px-3 py-2 h-full",
             bgColor
           )}
         >
