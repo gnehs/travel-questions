@@ -345,16 +345,16 @@ function App() {
               className="flex-1 rounded"
             >
               <button
-                className="bg-slate-200 text-slate-800 rounded-xl mb-2 py-2 px-4 flex justify-between gap-2 w-full items-center font-black"
+                className="bg-slate-200 hover:bg-slate-300 active:bg-slate-400 text-sm text-slate-800 rounded-xl mb-2 py-2 px-4 flex justify-between gap-2 w-full items-center font-black"
                 onClick={() => {
-                  let url = prompt("請輸入朋友的結果連結");
+                  let url = prompt("請輸入其他人的連結");
                   if (url) {
                     onUrlBtnClick(url);
                   }
                 }}
               >
-                加入朋友的結果
-                <i className="bx bx-plus"></i>
+                加入其他人的結果
+                <i className="bx bx-plus text-xl"></i>
               </button>
               <Result resultList={resultList ?? {}} />
             </motion.div>
