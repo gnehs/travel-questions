@@ -95,6 +95,13 @@ function App() {
     }
   }, [step]);
 
+  useEffect(() => {
+    if (Object.keys(resultList || {}).length === 0) return;
+    // update query string
+    const newLink = getShareUrl();
+    window.history.pushState({}, "", newLink);
+  }, [resultList]);
+
   function getShareUrl() {
     return `${window.location.origin}?res=${encodeURIComponent(
       encode(JSON.stringify(resultList || {}))
