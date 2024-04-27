@@ -7,7 +7,7 @@ import questions from "./assets/questions";
 import Result from "./components/Result";
 import Button from "./components/Button";
 const BASE_URL = "https://travel-questions.gnehs.net";
-const SUPPORT_URL_LIST = [BASE_URL];
+const SUPPORT_URL_LIST = [BASE_URL, "http://localhost:5173"];
 import BottomButtonContainer from "./components/BottomButtonContainer";
 import InfoDialog from "./components/InfoDialog";
 
@@ -18,7 +18,7 @@ function parseAnswer(answer = "") {
 
 function parseQuestionResultFromQueryString(
   url = ""
-): Array<[string, number[]]> | null {
+): { [key: string]: number[] } | null {
   if (!url) {
     return null;
   }
@@ -27,17 +27,16 @@ function parseQuestionResultFromQueryString(
   const formattedHash = hash.replace("#", "");
 
   if (formattedHash && formattedHash.length === questions.length) {
-    return [["me", formattedHash.split("").map(parseAnswer)]];
+    return { me: formattedHash.split("").map(parseAnswer) };
   }
 
   if (query) {
-    const multiResult: Array<[string, number[]]> = (
-      Object.entries(query) as string[][]
-    )
-      .filter(([, value]) => value.length === questions.length)
-      .map(([key, value]) => [key, value.split("").map(parseAnswer)]);
-
-    return multiResult.length > 0 ? multiResult : null;
+    let res: { [key: string]: number[] } = {};
+    for (let [name, value] of Object.entries(query)) {
+      if (name && value && value.length === questions.length)
+        res[name] = value.split("").map(parseAnswer);
+    }
+    return res;
   }
 
   return null;
@@ -49,9 +48,9 @@ function App() {
   const [question, setQuestion] = useState(0);
   const [urlResult, setUrlResult] = useState<string>("");
   const [result, setResult] = useState(questions.map(() => 0));
-  const [otherResultList, setOtherResultList] = useState<number[][] | null>(
-    null
-  );
+  const [resultList, setResultList] = useState<{
+    [key: string]: number[];
+  } | null>(null);
   const [name, setName] = useLocalStorage("name", "");
   const nameInput = useRef<HTMLInputElement | null>(null);
 
@@ -63,7 +62,7 @@ function App() {
 
     // 移除 hash 重新導向並加上 search
     if (hash && hash.length === questions.length) {
-      const newLink = window.location.origin + `?me=${hash}`;
+      const newLink = window.location.origin + `?user=${hash}`;
       window.location.assign(newLink);
       return;
     }
@@ -77,15 +76,12 @@ function App() {
       return;
     }
 
-    setResult(perviousResult[0][1] as number[]);
-
     // 有多個結果
-    if (perviousResult.length > 1) {
-      const otherResults = perviousResult.slice(1);
-      updateOtherResultList(otherResults);
+    if (perviousResult) {
+      setResultList(perviousResult);
     }
 
-    setStep(2);
+    setStep(3);
   }, []);
   useEffect(() => {
     if (step === 1) {
@@ -94,25 +90,14 @@ function App() {
   }, [step]);
 
   function getShareUrl() {
-    const formattedOtherResultList = otherResultList
-      ? otherResultList
-          .reduce<number[][]>((result, current) => {
-            current.map((answer, index) => {
-              if (!result[index]) {
-                result[index] = [];
-              }
-              result[index].push(answer);
-            });
+    const formattedOtherResultList = Object.entries(resultList || {}).reduce(
+      (acc, [name, result]) => {
+        return `${acc}&${encodeURIComponent(name)}=${result.join("")}`;
+      },
+      ""
+    );
 
-            return result;
-          }, [])
-          .map((result, index) => {
-            return `&${String.fromCharCode(97 + index)}=${result.join("")}`;
-          })
-          .join("")
-      : "";
-
-    return `${BASE_URL}?me=${result.join("")}${formattedOtherResultList}`;
+    return `${BASE_URL}?${formattedOtherResultList}`;
   }
   async function share() {
     const url = getShareUrl();
@@ -136,21 +121,6 @@ function App() {
     window.location.hash = "";
   }
 
-  function resetWithNewUser() {
-    updateStep(0);
-    setQuestion(0);
-    setResult(questions.map(() => 0));
-    if (otherResultList) {
-      const newResultList = otherResultList.map((question, index) => {
-        question.push(result[index]);
-        return question;
-      });
-      setOtherResultList(newResultList);
-    } else {
-      setOtherResultList(result.map((answer) => [answer]));
-    }
-  }
-
   function updateStep(i: number) {
     setDirection(step < i ? 1 : -1);
     setStep(i);
@@ -161,6 +131,7 @@ function App() {
     newResult[question] = answer;
     setResult(newResult);
     if (question === questions.length - 1) {
+      setResultList({ [name]: newResult, ...resultList });
       updateStep(3);
     } else {
       setDirection(1);
@@ -170,28 +141,6 @@ function App() {
   function perviousQuestion() {
     setDirection(-1);
     setQuestion(question - 1);
-  }
-
-  function updateOtherResultList(list: Array<[string, number[]]>) {
-    const formattedResultList = list.reduce<number[][]>(
-      (acc, curr) => {
-        const result = curr[1];
-        result.forEach((answer, index) => {
-          acc[index].push(answer);
-        });
-        return acc;
-      },
-      Array.from({ length: questions.length }, () => Array<number>())
-    );
-
-    if (!otherResultList) {
-      setOtherResultList(formattedResultList);
-    } else {
-      const newResultList = formattedResultList.map((result, index) => {
-        return [...otherResultList[index], ...result];
-      });
-      setOtherResultList(newResultList);
-    }
   }
 
   function onUrlBtnClick() {
@@ -211,7 +160,8 @@ function App() {
       alert("請貼上正確的網址");
       return;
     }
-    updateOtherResultList(result);
+
+    setResultList({ ...result, ...resultList });
     setUrlResult("");
   }
 
@@ -266,31 +216,10 @@ function App() {
         </div>
       )}
       {step === 3 && (
-        <div className="-mt-2 mb-2 ">
+        <div className="-mt-2 mb-2">
           <div className="flex justify-between items-center">
             <span className="md:text-xl font-bold">結果</span>
             <InfoDialog />
-          </div>
-          <div>
-            <div className="md:text-xl font-medium">
-              想對照朋友的結果嗎？把他的連結貼上來吧！
-            </div>
-            <div className="flex justify-between items-center">
-              <input
-                type="text"
-                className="flex-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="在這裡貼上朋友的連結"
-                value={urlResult}
-                onChange={(e) => setUrlResult(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && onUrlBtnClick()}
-              />
-              <button
-                className="ml-2 py-2 px-2 flex-none rounded-lg bg-green-200 border border-gray-300 hover:bg-green-300 active:bg-green-400"
-                onClick={onUrlBtnClick}
-              >
-                送出
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -404,29 +333,6 @@ function App() {
         )}
         {step === 3 && (
           <div className="w-full overflow-y-scroll">
-            {otherResultList && (
-              <div className="flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70">
-                <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center opacity-0">
-                  {questions[0].question}
-                </div>
-                <div className="flex items-center">
-                  <div className="py-2 text-center bg-pink-200  w-10">Me</div>
-                  {otherResultList[0].map((_, index) => (
-                    <div
-                      key={index}
-                      className={twMerge(
-                        "py-2 w-10 text-center border-solid border-l-2 border-l-blue-50",
-                        index % 2 === 0 ? "bg-blue-300" : "bg-blue-500",
-                        index === otherResultList[0].length - 1 &&
-                          "rounded-r-xl"
-                      )}
-                    >
-                      {String.fromCharCode(65 + index)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
             <motion.div
               key={3}
               layout
@@ -437,14 +343,20 @@ function App() {
               exit="exit"
               className="flex-1 rounded"
             >
-              {questions.map((q, i) => (
-                <Result
-                  key={i}
-                  question={q.question}
-                  answer={result[i]}
-                  otherAswerList={otherResultList && otherResultList[i]}
-                />
-              ))}
+              <button
+                className="bg-slate-200 text-slate-800 rounded-xl mb-2 py-2 px-4 flex justify-between gap-2 w-full items-center font-black"
+                onClick={() => {
+                  let url = prompt("請輸入朋友的結果連結");
+                  if (url) {
+                    setUrlResult(url);
+                    onUrlBtnClick();
+                  }
+                }}
+              >
+                加入朋友的結果
+                <i className="bx bx-plus"></i>
+              </button>
+              <Result resultList={resultList ?? {}} />
             </motion.div>
           </div>
         )}
@@ -516,10 +428,16 @@ function App() {
           <BottomButtonContainer key={2}>
             <div className="flex gap-2">
               <Button color="teal" onClick={() => reset()}>
-                <i className="bx bx-revision"></i> 重新開始
-              </Button>
-              <Button color="green" onClick={() => resetWithNewUser()}>
-                <i className="bx bx-plus"></i> 新增使用者
+                {Object.keys(resultList || {}).includes(name) ? (
+                  <>
+                    <i className="bx bx-revision"></i> 重新開始
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <i className="bx bx-plus"></i> 新增我的結果
+                  </>
+                )}
               </Button>
               <Button color="blue" onClick={() => share()}>
                 <i className="bx bxs-share"></i> 分享結果

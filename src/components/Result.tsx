@@ -1,61 +1,78 @@
 import { twMerge } from "tailwind-merge";
-
-function Answer({ answer, className }: { answer: number; className?: string }) {
-  return (
-    <div
-      className={twMerge(
-        "my-answer flex items-center justify-center py-2 px-3  w-10 h-full",
-        answer === 1 ? "bg-green-300" : "",
-        answer === 2 ? "bg-red-300" : "",
-        answer === 3 ? "bg-teal-300" : "",
-        className
-      )}
-    >
-      {answer === 1 && <span>⭕️</span>}
-      {answer === 2 && <span>❌</span>}
-      {answer === 3 && <span>❓</span>}
-      {answer === 4 && <span>未知錯誤</span>}
-    </div>
-  );
+import questions from "../assets/questions";
+function filterResultListWithAnswer(
+  question: number,
+  answer: number,
+  resultList: { [key: string]: number[] }
+) {
+  return Object.keys(resultList).filter((key) => {
+    return resultList[key][question] === answer;
+  });
 }
 
-function Result({
+function Answer({
   question,
   answer,
-  otherAswerList,
+  resultList,
 }: {
-  question: string;
+  question: number;
   answer: number;
-  otherAswerList?: number[] | null;
+  resultList: { [key: string]: number[] };
 }) {
+  const names = filterResultListWithAnswer(question, answer, resultList);
+  const bgColor = [
+    "bg-green-300 text-green-800",
+    "bg-red-300 text-red-800",
+    "bg-yellow-300 text-yellow-800",
+  ][answer - 1];
   return (
-    <div
-      className={twMerge(
-        "flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70",
-        answer === 1 ? "bg-green-200 text-green-800" : "",
-        answer === 2 ? "bg-red-200 text-red-800" : "",
-        answer === 3 ? "bg-teal-200 text-teal-800" : ""
-      )}
-    >
-      <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center">
-        {question}
+    names.length > 0 && (
+      <div className={twMerge("text-sm grid grid-cols-[2em_auto] items-start")}>
+        <div
+          className={twMerge(
+            "flex items-center justify-center px-4 py-2 h-full",
+            bgColor
+          )}
+        >
+          {answer === 1 && `⭕️`}
+          {answer === 2 && `❌`}
+          {answer === 3 && `❓`}
+        </div>
+        <div
+          className={twMerge(
+            "px-4 py-2 bg-opacity-50 h-full flex flex-col gap-0.5 justify-center",
+            bgColor
+          )}
+        >
+          {names.map((name) => (
+            <div key={name}>{name}</div>
+          ))}
+        </div>
       </div>
-      <div className="flex items-center">
-        <Answer answer={answer} />
-        {otherAswerList?.map((otherAnswer, index) => (
-          <Answer
-            key={index}
-            answer={otherAnswer}
-            className={
-              index === otherAswerList.length - 1
-                ? "rounded-r-xl border-solid border-l-2 border-l-blue-50"
-                : " border-solid border-l-2"
-            }
-          />
-        ))}
-      </div>
-    </div>
+    )
   );
+}
+function Result({
+  resultList = {},
+}: {
+  resultList?: {
+    [key: string]: number[];
+  };
+}) {
+  return questions.map((question, index) => {
+    const { question: questionText, icon } = question;
+    return (
+      <div className="mb-2 rounded-xl bg-white text-gray-900 relative overflow-hidden">
+        <div className="px-2 py-2 text-sm font-bold flex gap-4 items-center">
+          <i className={`text-lg ${icon} `}></i>
+          {questionText}
+        </div>
+        <Answer question={index} answer={1} resultList={resultList} />
+        <Answer question={index} answer={2} resultList={resultList} />
+        <Answer question={index} answer={3} resultList={resultList} />
+      </div>
+    );
+  });
 }
 
 export default Result;
