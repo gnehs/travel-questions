@@ -33,7 +33,8 @@ function BottomButtonContainer({ children }: { children: React.ReactNode }) {
         overflow: "hidden",
         marginTop: 0,
       }}
-      className="flex flex-col gap-2">
+      className="flex flex-col gap-2"
+    >
       {children}
     </motion.div>
   );
@@ -68,12 +69,13 @@ function Button({
         color === "stone"
           ? "bg-stone-200 hover:bg-stone-300 active:bg-stone-400 text-stone-800"
           : "",
-        className,
+        className
       )}
       onClick={onClick}
       whileTap={{
         scale: 0.95,
-      }}>
+      }}
+    >
       {children}
     </motion.button>
   );
@@ -103,7 +105,8 @@ function InfoDialog() {
       <div className="flex justify-end items-center">
         <button
           className="rounded-full w-12 h-12 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors translate-x-3"
-          onClick={() => setOpen(true)}>
+          onClick={() => setOpen(true)}
+        >
           <i className="bx bx-info-circle text-2xl"></i>
         </button>
       </div>
@@ -119,7 +122,8 @@ function InfoDialog() {
             }}
             exit={{
               opacity: 0,
-            }}>
+            }}
+          >
             <div
               className="fixed inset-0 m-auto bg-white bg-opacity-70 cursor-pointer"
               onClick={() => setOpen(false)}
@@ -128,10 +132,12 @@ function InfoDialog() {
               className="bg-white shadow-xl rounded-2xl border border-gray-100  w-[min(calc(100vw-52px),480px)] z-10 relative"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}>
+              exit={{ opacity: 0, scale: 0.9 }}
+            >
               <button
                 className="rounded-full w-8 h-8 bg-black bg-opacity-0 hover:bg-opacity-5 active:bg-opacity-10 flex items-center justify-center transition-colors absolute top-3 right-3"
-                onClick={() => setOpen(false)}>
+                onClick={() => setOpen(false)}
+              >
                 <i className="bx bx-x text-2xl" />
               </button>
               <div className="bg-gray-50 border-b border-gray-100 p-6 flex flex-col gap-4 rounded-t-2xl">
@@ -148,7 +154,8 @@ function InfoDialog() {
                   <a
                     href="https://www.facebook.com/lakuyuki/posts/pfbid02nPJ7d7F3i1trHVpXbjDYp5hzkrUcQBHCWgGgQTxNYSk7ER6CEXwW3dHEJxdFdDjDl"
                     target="_blank"
-                    className="link">
+                    className="link"
+                  >
                     這篇文章
                   </a>
                   。
@@ -158,7 +165,8 @@ function InfoDialog() {
                   <a
                     href="https://www.buymeacoffee.com/gnehs"
                     target="_blank"
-                    className="link">
+                    className="link"
+                  >
                     Buy Me A Coffee ☕️
                   </a>{" "}
                   小額抖內支持我！
@@ -168,7 +176,8 @@ function InfoDialog() {
                   <a
                     href="https://github.com/gnehs/travel-questions"
                     target="_blank"
-                    className="link">
+                    className="link"
+                  >
                     GitHub
                   </a>{" "}
                   幫我按個星星，有任何問題的話也可以在 GitHub 上開 Issue。
@@ -205,7 +214,7 @@ function parseAnswer(answer = "") {
 }
 
 function parseQuestionResultFromQueryString(
-  url = "",
+  url = ""
 ): Array<[string, number[]]> | null {
   if (!url) {
     return null;
@@ -238,7 +247,7 @@ function App() {
   const [urlResult, setUrlResult] = useState<string>("");
   const [result, setResult] = useState(questions.map(() => 0));
   const [otherResultList, setOtherResultList] = useState<number[][] | null>(
-    null,
+    null
   );
 
   useEffect(() => {
@@ -255,7 +264,7 @@ function App() {
     }
 
     const perviousResult = parseQuestionResultFromQueryString(
-      window.location.href,
+      window.location.href
     );
 
     if (!perviousResult) {
@@ -363,7 +372,7 @@ function App() {
         });
         return acc;
       },
-      Array.from({ length: questions.length }, () => Array<number>()),
+      Array.from({ length: questions.length }, () => Array<number>())
     );
 
     if (!otherResultList) {
@@ -380,7 +389,7 @@ function App() {
     if (!urlResult) return;
     const formattedUrl = urlResult.trim();
     const isValid = SUPPORT_URL_LIST.some((url) =>
-      formattedUrl.trim().startsWith(url),
+      formattedUrl.trim().startsWith(url)
     );
 
     if (!isValid) {
@@ -435,8 +444,9 @@ function App() {
             onClick={() => perviousQuestion()}
             className={twMerge(
               "text-base px-2 md:px-3 md:py-2 w-max",
-              question > 0 ? "" : "opacity-0 pointer-events-none",
-            )}>
+              question > 0 ? "" : "opacity-0 pointer-events-none"
+            )}
+          >
             <i className="bx bx-arrow-back"></i>上一題
           </Button>
 
@@ -459,7 +469,7 @@ function App() {
             <div className="flex justify-between items-center">
               <input
                 type="text"
-                className="flex-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="flex-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="在這裡貼上朋友的連結"
                 value={urlResult}
                 onChange={(e) => setUrlResult(e.target.value)}
@@ -467,7 +477,8 @@ function App() {
               />
               <button
                 className="ml-2 py-2 px-2 flex-none rounded-lg bg-green-200 border border-gray-300 hover:bg-green-300 active:bg-green-400"
-                onClick={onUrlBtnClick}>
+                onClick={onUrlBtnClick}
+              >
                 送出
               </button>
             </div>
@@ -484,7 +495,8 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
-            className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col">
+            className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
+          >
             <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-3 md:gap-4 border-2 border-gray-100">
               <i className="text-8xl bx bx-trip text-blue-600"></i>
               <div className="text-xl md:text-3xl font-bold">
@@ -505,11 +517,13 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
-            className="flex-1 relative">
+            className="flex-1 relative"
+          >
             <AnimatePresence
               mode="popLayout"
               initial={false}
-              custom={direction}>
+              custom={direction}
+            >
               <motion.div
                 key={question}
                 custom={direction}
@@ -521,10 +535,12 @@ function App() {
                   x: { type: "spring", stiffness: 300, damping: 30 },
                   opacity: { duration: 0.2 },
                 }}
-                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-1 md:gap-2 relative overflow-hidden h-full overflow-y-scroll">
+                className="bg-white rounded-xl p-8 flex items-start justify-start flex-col gap-1 md:gap-2 relative overflow-hidden h-full overflow-y-scroll"
+              >
                 <div
                   className="text-6xl md:text-8xl flex items-center justify-center absolute bottom-4 right-4 opacity-25"
-                  key={question}>
+                  key={question}
+                >
                   <i className={questions[question].icon}></i>
                 </div>
                 <div className="md:text-2xl font-bold opacity-25">
@@ -554,8 +570,9 @@ function App() {
                         "py-2 w-10 text-center border-solid border-l-2 border-l-blue-50",
                         index % 2 === 0 ? "bg-blue-300" : "bg-blue-500",
                         index === otherResultList[0].length - 1 &&
-                          "rounded-r-xl",
-                      )}>
+                          "rounded-r-xl"
+                      )}
+                    >
                       {String.fromCharCode(65 + index)}
                     </div>
                   ))}
@@ -570,7 +587,8 @@ function App() {
               initial="enter"
               animate="center"
               exit="exit"
-              className="flex-1 rounded">
+              className="flex-1 rounded"
+            >
               {questions.map((q, i) => (
                 <Result
                   key={i}
@@ -601,7 +619,8 @@ function App() {
                 result[question] === 1
                   ? "ring-2 ring-green-400 ring-offset-2"
                   : ""
-              }>
+              }
+            >
               ⭕️ 是
             </Button>
             <Button
@@ -611,7 +630,8 @@ function App() {
                 result[question] === 2
                   ? "ring-2 ring-red-400 ring-offset-2"
                   : ""
-              }>
+              }
+            >
               ❌ 否
             </Button>
             <Button
@@ -621,7 +641,8 @@ function App() {
                 result[question] === 3
                   ? "ring-2 ring-teal-400 ring-offset-2"
                   : ""
-              }>
+              }
+            >
               ❓ 有討論空間
             </Button>
           </BottomButtonContainer>
@@ -651,7 +672,8 @@ function App() {
               |{" "}
               <a
                 href="https://github.com/gnehs/travel-questions"
-                className="link">
+                className="link"
+              >
                 Source Code
               </a>
             </div>

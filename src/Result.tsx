@@ -8,8 +8,9 @@ function Answer({ answer, className }: { answer: number; className?: string }) {
         answer === 1 ? "bg-green-300" : "",
         answer === 2 ? "bg-red-300" : "",
         answer === 3 ? "bg-teal-300" : "",
-        className,
-      )}>
+        className
+      )}
+    >
       {answer === 1 && <span>⭕️</span>}
       {answer === 2 && <span>❌</span>}
       {answer === 3 && <span>❓</span>}
@@ -33,8 +34,9 @@ function Result({
         "flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70",
         answer === 1 ? "bg-green-200 text-green-800" : "",
         answer === 2 ? "bg-red-200 text-red-800" : "",
-        answer === 3 ? "bg-teal-200 text-teal-800" : "",
-      )}>
+        answer === 3 ? "bg-teal-200 text-teal-800" : ""
+      )}
+    >
       <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center">
         {question}
       </div>
