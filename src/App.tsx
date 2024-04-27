@@ -187,7 +187,7 @@ function App() {
     },
   };
   return (
-    <div className="flex w-full h-[100svh] flex-col p-4">
+    <div className="flex w-full h-[100dvh] flex-col p-4">
       {step <= 1 && (
         <div className="-mt-2 mb-2 flex justify-between items-center">
           <span className="md:text-xl font-bold">朋友旅行防止絕交檢查表</span>
