@@ -187,7 +187,7 @@ function App() {
     },
   };
   return (
-    <div className="flex w-full h-[100dvh] flex-col p-4">
+    <div className="flex w-full h-[100dvh] flex-col p-2 md:p-4">
       {step <= 1 && (
         <div className="-mt-2 mb-2 flex justify-between items-center">
           <span className="md:text-xl font-bold">朋友旅行防止絕交檢查表</span>
@@ -255,7 +255,7 @@ function App() {
             exit="exit"
             className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
           >
-            <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-3 md:gap-4 border-2 border-gray-100">
+            <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-3 md:gap-4 border-2 border-gray-100 w-full">
               <i className="text-8xl bx bx-user text-blue-600"></i>
               <div className="text-xl md:text-3xl font-bold">你的暱稱是？</div>
               <div className="text-sm -mt-1 md:mt-0 md:text-xl opacity-50">
