@@ -198,15 +198,15 @@ function App() {
     },
   };
   return (
-    <div className="flex w-full h-[100dvh] flex-col p-2 md:p-4 overflow-hidden">
+    <div className="flex w-full h-[100dvh] flex-col p-2 pt-0 md:p-4 md:pt-0">
       {step <= 1 && (
-        <div className="-mt-2 mb-2 flex justify-between items-center">
+        <div className="flex justify-between items-center py-1">
           <span className="md:text-xl font-bold">朋友旅行防止絕交檢查表</span>
           <InfoDialog />
         </div>
       )}
       {step === 2 && (
-        <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2 mb-2">
+        <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center py-1">
           <Button
             color="stone"
             onClick={() => perviousQuestion()}
@@ -225,7 +225,7 @@ function App() {
         </div>
       )}
       {step === 3 && (
-        <div className="-mt-2 mb-2">
+        <div className="py-1">
           <div className="flex justify-between items-center">
             <span className="md:text-xl font-bold">結果</span>
             <InfoDialog />

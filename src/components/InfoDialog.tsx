@@ -24,7 +24,7 @@ export default function InfoDialog() {
     <>
       <div className="flex justify-end items-center">
         <button
-          className="rounded-full w-12 h-12 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors translate-x-3"
+          className="rounded-full w-12 h-12 bg-black bg-opacity-0 hover:bg-opacity-10 active:bg-opacity-20 flex items-center justify-center transition-colors"
           onClick={() => setOpen(true)}
         >
           <i className="bx bx-info-circle text-2xl"></i>
