@@ -28,7 +28,7 @@ function parseQuestionResultFromQueryString(
   const formattedHash = hash.replace("#", "");
 
   if (formattedHash && formattedHash.length === questions.length) {
-    return { me: formattedHash.split("").map(parseAnswer) };
+    return { user: formattedHash.split("").map(parseAnswer) };
   }
 
   if (query) {
