@@ -23,13 +23,17 @@ function Answer({
   const [username] = useLocalStorage("name", "");
   const names = filterResultListWithAnswer(question, answer, resultList);
   const bgColor = [
-    "bg-green-300 text-green-800",
-    "bg-red-300 text-red-800",
-    "bg-yellow-300 text-yellow-800",
+    "bg-green-200 text-green-800 from-green-100",
+    "bg-red-200 text-red-800 from-red-100",
+    "bg-yellow-200 text-yellow-800 from-yellow-100",
   ][answer - 1];
   return (
     names.length > 0 && (
-      <div className={twMerge("text-sm grid grid-cols-[2em_auto] items-start")}>
+      <div
+        className={twMerge(
+          "text-sm grid grid-cols-[auto_1fr] items-start rounded last:rounded-b-lg overflow-hidden"
+        )}
+      >
         <div
           className={twMerge(
             "flex items-center justify-center px-4 py-2 h-full",
@@ -42,7 +46,7 @@ function Answer({
         </div>
         <div
           className={twMerge(
-            "px-4 py-2 bg-opacity-50 h-full flex flex-col gap-0.5 justify-center",
+            "px-3 py-2 bg-opacity-50 h-full flex flex-col gap-0.5 justify-center bg-gradient-to-r to-gray-50 shadow-2xl",
             bgColor
           )}
         >
@@ -69,10 +73,10 @@ function Result({
   return questions.map((question, index) => {
     const { question: questionText, icon } = question;
     return (
-      <div className="mb-2 rounded-xl bg-white text-gray-900 relative overflow-hidden">
-        <div className="px-2 py-2 text-sm font-bold flex gap-4 items-center">
-          <i className={`text-lg ${icon} `}></i>
+      <div className="mb-2 rounded-xl bg-white text-gray-900 relative overflow-hidden p-1 flex flex-col gap-1">
+        <div className="px-3 text-sm py-1 font-bold flex gap-4 items-center justify-between">
           {questionText}
+          <i className={`text-xl ${icon} opacity-50`}></i>
         </div>
         <Answer question={index} answer={1} resultList={resultList} />
         <Answer question={index} answer={2} resultList={resultList} />
