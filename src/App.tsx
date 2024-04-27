@@ -32,14 +32,18 @@ function parseQuestionResultFromQueryString(
     return { user: formattedHash.split("").map(parseAnswer) };
   }
 
+  if (query.res) {
+    const result = decode(query.res as string);
+    if (result) {
+      return JSON.parse(result);
+    }
+  }
   if (query) {
     let res: { [key: string]: number[] } = {};
     for (let [name, value] of Object.entries(query)) {
       if (name && value) {
         if (value.length === questions.length) {
           res[name] = value.split("").map(parseAnswer);
-        } else {
-          res[name] = decode(value);
         }
       }
     }
@@ -92,15 +96,9 @@ function App() {
   }, [step]);
 
   function getShareUrl() {
-    const formattedOtherResultList = Object.entries(resultList || {})
-      .map(([key, value]) => {
-        return `${encodeURIComponent(key)}=${encodeURIComponent(
-          encode(value)
-        )}`;
-      })
-      .join("&");
-
-    return `${window.location.origin}?${formattedOtherResultList}`;
+    return `${window.location.origin}?res=${encodeURIComponent(
+      encode(JSON.stringify(resultList || {}))
+    )}`;
   }
   async function share() {
     const url = getShareUrl();
