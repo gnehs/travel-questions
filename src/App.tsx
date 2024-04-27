@@ -274,7 +274,7 @@ function App() {
               >
                 <input
                   type="text"
-                  className="bg-transparent border-b-2 border-gray-100 text-xl text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 outline-0"
+                  className="bg-transparent border-b-2 border-gray-100 text-xl text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 outline-0 rounded-none transition-colors duration-200 ease-in-out"
                   placeholder="請輸入暱稱"
                   ref={nameInput}
                   value={name}
