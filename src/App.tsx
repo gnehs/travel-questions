@@ -34,7 +34,13 @@ function parseQuestionResultFromQueryString(
   if (query) {
     let res: { [key: string]: number[] } = {};
     for (let [name, value] of Object.entries(query)) {
-      if (name && value) res[name] = decode(value);
+      if (name && value) {
+        if (value.length === questions.length) {
+          res[name] = value.split("").map(parseAnswer);
+        } else {
+          res[name] = decode(value);
+        }
+      }
     }
     return res;
   }
