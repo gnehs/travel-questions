@@ -94,7 +94,9 @@ function App() {
   function getShareUrl() {
     const formattedOtherResultList = Object.entries(resultList || {})
       .map(([key, value]) => {
-        return `${key}=${encode(value)}`;
+        return `${encodeURIComponent(key)}=${encodeURIComponent(
+          encode(value)
+        )}`;
       })
       .join("&");
 
