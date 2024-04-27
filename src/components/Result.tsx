@@ -73,7 +73,10 @@ function Result({
   return questions.map((question, index) => {
     const { question: questionText, icon } = question;
     return (
-      <div className="mb-2 rounded-xl bg-white text-gray-900 relative overflow-hidden p-1 flex flex-col gap-1">
+      <div
+        className="mb-2 rounded-xl bg-white text-gray-900 relative overflow-hidden p-1 flex flex-col gap-1"
+        key={index}
+      >
         <div className="px-3 text-sm py-1 font-bold flex gap-4 items-center justify-between">
           {questionText}
           <i className={`text-xl ${icon} opacity-50`}></i>
