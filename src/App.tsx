@@ -46,7 +46,6 @@ function App() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [question, setQuestion] = useState(0);
-  const [urlResult, setUrlResult] = useState<string>("");
   const [result, setResult] = useState(questions.map(() => 0));
   const [resultList, setResultList] = useState<{
     [key: string]: number[];
@@ -143,9 +142,9 @@ function App() {
     setQuestion(question - 1);
   }
 
-  function onUrlBtnClick() {
-    if (!urlResult) return;
-    const formattedUrl = urlResult.trim();
+  function onUrlBtnClick(url: string) {
+    if (!url) return;
+    const formattedUrl = url.trim();
     const isValid = SUPPORT_URL_LIST.some((url) =>
       formattedUrl.trim().startsWith(url)
     );
@@ -162,7 +161,6 @@ function App() {
     }
 
     setResultList({ ...result, ...resultList });
-    setUrlResult("");
   }
 
   const variants = {
@@ -348,8 +346,7 @@ function App() {
                 onClick={() => {
                   let url = prompt("請輸入朋友的結果連結");
                   if (url) {
-                    setUrlResult(url);
-                    onUrlBtnClick();
+                    onUrlBtnClick(url);
                   }
                 }}
               >
