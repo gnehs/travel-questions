@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
+import { useLocalStorage } from "usehooks-ts";
 import urlParser from "url-parse";
 import questions from "./assets/questions";
 import Result from "./components/Result";
@@ -51,6 +52,8 @@ function App() {
   const [otherResultList, setOtherResultList] = useState<number[][] | null>(
     null
   );
+  const [name, setName] = useLocalStorage("name", "");
+  const nameInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!window.location.hash && !window.location.search) {
@@ -84,6 +87,11 @@ function App() {
 
     setStep(2);
   }, []);
+  useEffect(() => {
+    if (step === 1) {
+      nameInput.current?.focus();
+    }
+  }, [step]);
 
   function getShareUrl() {
     const formattedOtherResultList = otherResultList
@@ -153,7 +161,7 @@ function App() {
     newResult[question] = answer;
     setResult(newResult);
     if (question === questions.length - 1) {
-      updateStep(2);
+      updateStep(3);
     } else {
       setDirection(1);
       setQuestion(question + 1);
@@ -232,13 +240,13 @@ function App() {
   };
   return (
     <div className="flex w-full h-[100svh] flex-col p-4">
-      {step === 0 && (
+      {step <= 1 && (
         <div className="-mt-2 mb-2 flex justify-between items-center">
           <span className="md:text-xl font-bold">朋友旅行防止絕交檢查表</span>
           <InfoDialog />
         </div>
       )}
-      {step === 1 && (
+      {step === 2 && (
         <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 items-center -mt-2 mb-2">
           <Button
             color="stone"
@@ -257,7 +265,7 @@ function App() {
           <InfoDialog />
         </div>
       )}
-      {step === 2 && (
+      {step === 3 && (
         <div className="-mt-2 mb-2 ">
           <div className="flex justify-between items-center">
             <span className="md:text-xl font-bold">結果</span>
@@ -318,6 +326,46 @@ function App() {
             initial="enter"
             animate="center"
             exit="exit"
+            className="flex-1 bg-white rounded-xl p-4 flex items-start justify-center flex-col"
+          >
+            <div className="flex-1 rounded-lg p-4 flex items-start justify-center flex-col gap-3 md:gap-4 border-2 border-gray-100">
+              <i className="text-8xl bx bx-user text-blue-600"></i>
+              <div className="text-xl md:text-3xl font-bold">你的暱稱是？</div>
+              <div className="text-sm -mt-1 md:mt-0 md:text-xl opacity-50">
+                請在下方輸入您的暱稱，以便於分享結果時辨識。
+              </div>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (name === "") {
+                    alert("請輸入暱稱");
+                    return;
+                  }
+                  updateStep(2);
+                }}
+                className="w-full"
+              >
+                <input
+                  type="text"
+                  className="bg-transparent border-b-2 border-gray-100 text-xl text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 outline-0"
+                  placeholder="請輸入暱稱"
+                  ref={nameInput}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </form>
+            </div>
+          </motion.div>
+        )}
+        {step === 2 && (
+          <motion.div
+            key={2}
+            layout
+            variants={variants}
+            custom={direction}
+            initial="enter"
+            animate="center"
+            exit="exit"
             className="flex-1 relative"
           >
             <AnimatePresence
@@ -354,11 +402,10 @@ function App() {
             </AnimatePresence>
           </motion.div>
         )}
-        {step === 2 && (
+        {step === 3 && (
           <div className="w-full overflow-y-scroll">
             {otherResultList && (
               <div className="flex justify-between mb-2 rounded-xl gap-2 bg-opacity-70">
-                {/* 隱藏問題，用來排班 */}
                 <div className="py-2 pl-3 grow-1 shrink-0 basis-1/2 justify-start items-center opacity-0">
                   {questions[0].question}
                 </div>
@@ -381,7 +428,7 @@ function App() {
               </div>
             )}
             <motion.div
-              key={2}
+              key={3}
               layout
               variants={variants}
               custom={direction}
@@ -412,6 +459,23 @@ function App() {
           </BottomButtonContainer>
         )}
         {step === 1 && (
+          <BottomButtonContainer key={0}>
+            <Button
+              color="blue"
+              onClick={() => {
+                if (name === "") {
+                  alert("請輸入暱稱");
+                  return;
+                }
+                updateStep(2);
+              }}
+            >
+              下一步
+              <i className="bx bx-arrow-back rotate-180 group-hover:translate-x-1 transition-transform"></i>
+            </Button>
+          </BottomButtonContainer>
+        )}
+        {step === 2 && (
           <BottomButtonContainer key={1}>
             <Button
               color="green"
@@ -448,7 +512,7 @@ function App() {
             </Button>
           </BottomButtonContainer>
         )}
-        {step === 2 && (
+        {step === 3 && (
           <BottomButtonContainer key={2}>
             <div className="flex gap-2">
               <Button color="teal" onClick={() => reset()}>
