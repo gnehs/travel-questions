@@ -92,14 +92,13 @@ function App() {
   }, [step]);
 
   function getShareUrl() {
-    const formattedOtherResultList = Object.entries(resultList || {}).reduce(
-      (acc, [name, result]) => {
-        return `${acc}&${encodeURIComponent(name)}=${encode(result)}`;
-      },
-      ""
-    );
+    const formattedOtherResultList = Object.entries(resultList || {})
+      .map(([key, value]) => {
+        return `${key}=${encode(value)}`;
+      })
+      .join("&");
 
-    return `${BASE_URL}?${formattedOtherResultList}`;
+    return `${window.location.origin}?${formattedOtherResultList}`;
   }
   async function share() {
     const url = getShareUrl();
