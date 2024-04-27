@@ -6,6 +6,7 @@ import urlParser from "url-parse";
 import questions from "./assets/questions";
 import Result from "./components/Result";
 import Button from "./components/Button";
+import { encode, decode } from "./utils/encodeResult";
 const BASE_URL = "https://travel-questions.gnehs.net";
 const SUPPORT_URL_LIST = [BASE_URL, "http://localhost:5173"];
 import BottomButtonContainer from "./components/BottomButtonContainer";
@@ -33,8 +34,7 @@ function parseQuestionResultFromQueryString(
   if (query) {
     let res: { [key: string]: number[] } = {};
     for (let [name, value] of Object.entries(query)) {
-      if (name && value && value.length === questions.length)
-        res[name] = value.split("").map(parseAnswer);
+      if (name && value) res[name] = decode(value);
     }
     return res;
   }
@@ -75,11 +75,7 @@ function App() {
       return;
     }
 
-    // 有多個結果
-    if (perviousResult) {
-      setResultList(perviousResult);
-    }
-
+    setResultList(perviousResult);
     setStep(3);
   }, []);
   useEffect(() => {
@@ -91,7 +87,7 @@ function App() {
   function getShareUrl() {
     const formattedOtherResultList = Object.entries(resultList || {}).reduce(
       (acc, [name, result]) => {
-        return `${acc}&${encodeURIComponent(name)}=${result.join("")}`;
+        return `${acc}&${encodeURIComponent(name)}=${encode(result)}`;
       },
       ""
     );
