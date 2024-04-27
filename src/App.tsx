@@ -2,16 +2,18 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { useLocalStorage } from "usehooks-ts";
+import { encode, decode } from "./utils/encodeResult";
 import urlParser from "url-parse";
 import questions from "./assets/questions";
 import Result from "./components/Result";
 import Button from "./components/Button";
-import { encode, decode } from "./utils/encodeResult";
 import BottomButtonContainer from "./components/BottomButtonContainer";
 import InfoDialog from "./components/InfoDialog";
 
-const BASE_URL = "https://travel-questions.gnehs.net";
-const SUPPORT_URL_LIST = [BASE_URL, "http://localhost:5173"];
+const SUPPORT_URL_LIST = [
+  "https://travel-questions.gnehs.net",
+  "http://localhost:5173",
+];
 
 function parseAnswer(answer = "") {
   const formattedAnswer = parseInt(answer);
